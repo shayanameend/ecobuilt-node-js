@@ -1,0 +1,230 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  UNSPECIFIED
+  SUPER_ADMIN
+  ADMIN
+  VENDOR
+  USER
+}
+
+enum UserStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model Auth {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  email      String     @unique
+  password   String
+  status     UserStatus @default(PENDING)
+  role       Role       @default(UNSPECIFIED)
+  isVerified Boolean    @default(false) @map("is_verified")
+  isDeleted  Boolean    @default(false) @map("is_deleted")
+
+  otpId String? @map("otp_id") @db.ObjectId
+  otp   Otp?
+
+  admin  Admin?
+  vendor Vendor?
+  user   User?
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+}
+
+enum OtpType {
+  VERIFY
+  RESET
+}
+
+model Otp {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  code String
+  type OtpType @default(VERIFY)
+
+  authId String @unique @map("user_id") @db.ObjectId
+  auth   Auth   @relation(fields: [authId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+}
+
+model Admin {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  pictureId String @map("picture_url")
+  name      String
+  phone     String
+
+  authId String @unique @map("user_id") @db.ObjectId
+  auth   Auth   @relation(fields: [authId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+}
+
+model Vendor {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  pictureId     String @map("picture_url")
+  name          String
+  description   String
+  phone         String
+  postalCode    String @map("postal_code")
+  city          String
+  pickupAddress String @map("pickup_address")
+
+  authId String @unique @map("user_id") @db.ObjectId
+  auth   Auth   @relation(fields: [authId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  products Product[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+}
+
+model User {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  pictureId       String @map("picture_url")
+  name            String
+  phone           String
+  postalCode      String @map("postal_code")
+  city            String
+  deliveryAddress String @map("delivery_address")
+
+  authId String @unique @map("user_id") @db.ObjectId
+  auth   Auth   @relation(fields: [authId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  orders  Order[]
+  reviews Review[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+}
+
+enum CategoryStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model Category {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  name      String
+  status    CategoryStatus @default(PENDING)
+  isDeleted Boolean        @default(false) @map("is_deleted")
+
+  products Product[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+}
+
+model Product {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  pictureIds  String[] @map("picture_urls")
+  name        String
+  description String
+  sku         String
+  stock       Int
+  price       Float
+  salePrice   Float?   @map("sale_price")
+  isDeleted   Boolean  @default(false) @map("is_deleted")
+
+  categoryId String   @map("category_id") @db.ObjectId
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  vendorId String @map("vendor_id") @db.ObjectId
+  vendor   Vendor @relation(fields: [vendorId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  orderToProduct OrderToProduct[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+}
+
+enum OrderStatus {
+  PENDING
+  REJECTED
+  CANCELLED
+  RETURNED
+  APPROVED
+  PROCESSING
+  IN_TRANSIT
+  DELIVERED
+}
+
+model Order {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  price  Float
+  status OrderStatus @default(PENDING)
+
+  orderToProduct OrderToProduct[]
+  shipping       Shipping?
+  review         Review?
+
+  userId String @map("user_id") @db.ObjectId
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+}
+
+model OrderToProduct {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  price    Float
+  quantity Int
+
+  orderId String @map("order_id") @db.ObjectId
+  order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  productId String  @map("product_id") @db.ObjectId
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+}
+
+model Shipping {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  price Float
+
+  orderId String @unique @map("order_id") @db.ObjectId
+  order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+}
+
+model Review {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  rating  Int
+  comment String
+
+  orderId String @unique @map("product_id") @db.ObjectId
+  order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  userId String @map("user_id") @db.ObjectId
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+}
