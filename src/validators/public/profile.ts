@@ -4,7 +4,7 @@ import * as zod from "zod";
 
 const createProfileBodySchema = zod.object({
   role: zod.enum([Role.SUPER_ADMIN, Role.ADMIN, Role.VENDOR, Role.USER], {
-    message: "Role must be one of 'SUPER_ADMIN', 'ADMIN', 'VENDOR', or 'USER'",
+    message: "Role must be one of 'SUPER_ADMIN', 'ADMIN', 'VENDOR', 'USER'",
   }),
 });
 

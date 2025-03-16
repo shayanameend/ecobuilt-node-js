@@ -19,7 +19,7 @@ const getCategoriesQuerySchema = zod.object({
         CategoryStatus.REJECTED,
       ],
       {
-        message: "Status must be one of 'PENDING', 'APPROVED', or 'REJECTED'",
+        message: "Status must be one of 'PENDING', 'APPROVED', 'REJECTED'",
       },
     )
     .optional(),
@@ -52,7 +52,7 @@ const createCategoryBodySchema = zod.object({
         CategoryStatus.REJECTED,
       ],
       {
-        message: "Status must be one of 'PENDING', 'APPROVED', or 'REJECTED'",
+        message: "Status must be one of 'PENDING', 'APPROVED', 'REJECTED'",
       },
     )
     .default(CategoryStatus.PENDING),
@@ -84,7 +84,7 @@ const updateCategoryBodySchema = zod.object({
         CategoryStatus.REJECTED,
       ],
       {
-        message: "Status must be one of 'PENDING', 'APPROVED', or 'REJECTED'",
+        message: "Status must be one of 'PENDING', 'APPROVED', 'REJECTED'",
       },
     )
     .optional(),
