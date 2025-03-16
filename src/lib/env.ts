@@ -16,7 +16,7 @@ const envSchema = zod.object({
   NODEMAILER_SECURE: zod.preprocess(
     (val) => (val === "true" ? true : val === "false" ? false : val),
     zod.boolean({
-      message: "isDeleted must be a boolean!",
+      message: "isDeleted must be a boolean",
     }),
   ),
   NODEMAILER_EMAIL: zod.string().email(),

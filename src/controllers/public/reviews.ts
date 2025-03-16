@@ -30,7 +30,7 @@ async function getReviews(request: Request, response: Response) {
           meta: { total: 0, pages: 1, limit, page },
         },
         {
-          message: "Reviews fetched successfully!",
+          message: "Reviews fetched successfully",
         },
       );
     }
@@ -69,7 +69,7 @@ async function getReviews(request: Request, response: Response) {
         meta: { total, pages, limit, page },
       },
       {
-        message: "Reviews fetched successfully!",
+        message: "Reviews fetched successfully",
       },
     );
   } catch (error) {

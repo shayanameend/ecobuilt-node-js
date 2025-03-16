@@ -44,7 +44,7 @@ async function getVendors(request: Request, response: Response) {
             meta: { total: 0, pages: 1, limit, page },
           },
           {
-            message: "Vendors fetched successfully!",
+            message: "Vendors fetched successfully",
           },
         );
       }
@@ -154,7 +154,7 @@ async function getVendors(request: Request, response: Response) {
         meta: { total, pages, limit, page },
       },
       {
-        message: "Vendors fetched successfully!",
+        message: "Vendors fetched successfully",
       },
     );
   } catch (error) {
@@ -184,7 +184,7 @@ async function getVendor(request: Request, response: Response) {
       });
 
       if (!category) {
-        throw new NotFoundResponse("Vendor not found!");
+        throw new NotFoundResponse("Vendor not found");
       }
     }
 
@@ -258,7 +258,7 @@ async function getVendor(request: Request, response: Response) {
     });
 
     if (!vendor) {
-      throw new NotFoundResponse("Vendor not found!");
+      throw new NotFoundResponse("Vendor not found");
     }
 
     return response.success(
@@ -266,7 +266,7 @@ async function getVendor(request: Request, response: Response) {
         data: { vendor },
       },
       {
-        message: "Vendor fetched successfully!",
+        message: "Vendor fetched successfully",
       },
     );
   } catch (error) {
@@ -297,7 +297,7 @@ async function updateVendor(request: Request, response: Response) {
     });
 
     if (!vendor) {
-      throw new NotFoundResponse("Vendor not found!");
+      throw new NotFoundResponse("Vendor not found");
     }
 
     return response.success(
@@ -305,7 +305,7 @@ async function updateVendor(request: Request, response: Response) {
         data: { vendor },
       },
       {
-        message: "Vendor updated successfully!",
+        message: "Vendor updated successfully",
       },
     );
   } catch (error) {

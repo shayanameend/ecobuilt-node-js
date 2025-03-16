@@ -40,7 +40,7 @@ async function getUsers(request: Request, response: Response) {
           meta: { total: 0, pages: 1, limit, page },
         },
         {
-          message: "Users fetched successfully!",
+          message: "Users fetched successfully",
         },
       );
     }
@@ -130,7 +130,7 @@ async function getUsers(request: Request, response: Response) {
         meta: { total, pages, limit, page },
       },
       {
-        message: "Users fetched successfully!",
+        message: "Users fetched successfully",
       },
     );
   } catch (error) {
@@ -152,7 +152,7 @@ async function getUser(request: Request, response: Response) {
     });
 
     if (!vendor) {
-      throw new NotFoundResponse("User not found!");
+      throw new NotFoundResponse("User not found");
     }
 
     const user = await prisma.user.findUnique({
@@ -196,7 +196,7 @@ async function getUser(request: Request, response: Response) {
     });
 
     if (!user) {
-      throw new NotFoundResponse("User not found!");
+      throw new NotFoundResponse("User not found");
     }
 
     return response.success(
@@ -204,7 +204,7 @@ async function getUser(request: Request, response: Response) {
         data: { user },
       },
       {
-        message: "User fetched successfully!",
+        message: "User fetched successfully",
       },
     );
   } catch (error) {

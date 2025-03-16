@@ -95,7 +95,7 @@ async function getAdmins(request: Request, response: Response) {
         meta: { total, pages, limit, page },
       },
       {
-        message: "Admins fetched successfully!",
+        message: "Admins fetched successfully",
       },
     );
   } catch (error) {
@@ -120,7 +120,7 @@ async function getAdmin(request: Request, response: Response) {
     });
 
     if (!admin) {
-      throw new NotFoundResponse("Admin not found!");
+      throw new NotFoundResponse("Admin not found");
     }
 
     return response.success(
@@ -128,7 +128,7 @@ async function getAdmin(request: Request, response: Response) {
         data: { admin },
       },
       {
-        message: "Admin fetched successfully!",
+        message: "Admin fetched successfully",
       },
     );
   } catch (error) {
@@ -159,7 +159,7 @@ async function updateAdmin(request: Request, response: Response) {
     });
 
     if (!admin) {
-      throw new NotFoundResponse("Admin not found!");
+      throw new NotFoundResponse("Admin not found");
     }
 
     return response.success(
@@ -167,7 +167,7 @@ async function updateAdmin(request: Request, response: Response) {
         data: { admin },
       },
       {
-        message: "Admin updated successfully!",
+        message: "Admin updated successfully",
       },
     );
   } catch (error) {

@@ -9,5 +9,5 @@ const io = new Socket(server, {
 });
 
 io.on("connection", () => {
-  console.log("Connected!");
+  console.log("Connected");
 });

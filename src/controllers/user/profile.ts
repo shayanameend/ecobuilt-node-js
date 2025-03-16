@@ -24,7 +24,7 @@ async function getProfile(request: Request, response: Response) {
     });
 
     if (!profile) {
-      throw new NotFoundResponse("Profile not found!");
+      throw new NotFoundResponse("Profile not found");
     }
 
     return response.success(
@@ -34,7 +34,7 @@ async function getProfile(request: Request, response: Response) {
         },
       },
       {
-        message: "Profile fetched successfully!",
+        message: "Profile fetched successfully",
       },
     );
   } catch (error) {
@@ -45,11 +45,11 @@ async function getProfile(request: Request, response: Response) {
 async function updateProfile(request: Request, response: Response) {
   try {
     if (request.body.pictureId && !request.file) {
-      throw new BadResponse("Profile picture is required!");
+      throw new BadResponse("Profile picture is required");
     }
 
     if (request.file && !request.body.pictureId) {
-      throw new BadResponse("Picture ID is required!");
+      throw new BadResponse("Picture ID is required");
     }
 
     let pictureId = request.body.pictureId;
@@ -98,7 +98,7 @@ async function updateProfile(request: Request, response: Response) {
         },
       },
       {
-        message: "Profile updated successfully!",
+        message: "Profile updated successfully",
       },
     );
   } catch (error) {

@@ -19,7 +19,7 @@ async function createProfile(request: Request, response: Response) {
     const { role } = createProfileBodySchema.parse(request.body);
 
     if (!request.file) {
-      throw new BadResponse("Profile picture is required!");
+      throw new BadResponse("Profile picture is required");
     }
 
     const pictureId = addFile({
@@ -74,7 +74,7 @@ async function createProfile(request: Request, response: Response) {
             },
           },
           {
-            message: "Profile created successfully!",
+            message: "Profile created successfully",
           },
         );
       }
@@ -127,7 +127,7 @@ async function createProfile(request: Request, response: Response) {
             },
           },
           {
-            message: "Profile created successfully!",
+            message: "Profile created successfully",
           },
         );
       }
@@ -180,7 +180,7 @@ async function createProfile(request: Request, response: Response) {
             },
           },
           {
-            message: "Profile created successfully!",
+            message: "Profile created successfully",
           },
         );
       }

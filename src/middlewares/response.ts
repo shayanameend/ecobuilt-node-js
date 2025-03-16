@@ -9,7 +9,7 @@ async function expandResponse(
 ) {
   response.success = (
     body: JSONObject,
-    info: Info = { message: "Success!" },
+    info: Info = { message: "Success" },
   ) => {
     body.info = info as unknown as JSONObject;
 
@@ -18,7 +18,7 @@ async function expandResponse(
 
   response.created = (
     body: JSONObject,
-    info: Info = { message: "Created!" },
+    info: Info = { message: "Created" },
   ) => {
     body.info = info as unknown as JSONObject;
 
@@ -27,7 +27,7 @@ async function expandResponse(
 
   response.badRequest = (
     body: JSONObject,
-    info: Info = { message: "Bad Request!" },
+    info: Info = { message: "Bad Request" },
   ) => {
     body.info = info as unknown as JSONObject;
 
@@ -36,7 +36,7 @@ async function expandResponse(
 
   response.unauthorized = (
     body: JSONObject,
-    info: Info = { message: "Unauthorized!" },
+    info: Info = { message: "Unauthorized" },
   ) => {
     body.info = info as unknown as JSONObject;
 
@@ -45,7 +45,7 @@ async function expandResponse(
 
   response.forbidden = (
     body: JSONObject,
-    info: Info = { message: "Forbidden!" },
+    info: Info = { message: "Forbidden" },
   ) => {
     body.info = info as unknown as JSONObject;
 
@@ -54,7 +54,7 @@ async function expandResponse(
 
   response.notFound = (
     body: JSONObject,
-    info: Info = { message: "Not Found!" },
+    info: Info = { message: "Not Found" },
   ) => {
     body.info = info as unknown as JSONObject;
 
@@ -63,7 +63,7 @@ async function expandResponse(
 
   response.internalServerError = (
     body: JSONObject,
-    info: Info = { message: "Internal Server Error!" },
+    info: Info = { message: "Internal Server Error" },
   ) => {
     body.info = info as unknown as JSONObject;
 

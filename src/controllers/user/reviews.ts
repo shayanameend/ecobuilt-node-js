@@ -21,7 +21,7 @@ async function createReview(request: Request, response: Response) {
     });
 
     if (!user) {
-      throw new BadResponse("Failed to create review!");
+      throw new BadResponse("Failed to create review");
     }
 
     const order = await prisma.order.findUnique({
@@ -35,7 +35,7 @@ async function createReview(request: Request, response: Response) {
     });
 
     if (!order) {
-      throw new BadResponse("Failed to create review!");
+      throw new BadResponse("Failed to create review");
     }
 
     const review = await prisma.review.create({
@@ -62,7 +62,7 @@ async function createReview(request: Request, response: Response) {
         data: { review },
       },
       {
-        message: "Review created successfully!",
+        message: "Review created successfully",
       },
     );
   } catch (error) {

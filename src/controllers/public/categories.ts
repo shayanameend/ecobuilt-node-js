@@ -21,7 +21,7 @@ async function getCategories(_request: Request, response: Response) {
         data: { categories },
       },
       {
-        message: "Categories fetched successfully!",
+        message: "Categories fetched successfully",
       },
     );
   } catch (error) {

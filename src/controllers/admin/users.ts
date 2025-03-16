@@ -121,7 +121,7 @@ async function getUsers(request: Request, response: Response) {
         meta: { total, pages, limit, page },
       },
       {
-        message: "Users fetched successfully!",
+        message: "Users fetched successfully",
       },
     );
   } catch (error) {
@@ -161,7 +161,7 @@ async function getUser(request: Request, response: Response) {
     });
 
     if (!user) {
-      throw new NotFoundResponse("User not found!");
+      throw new NotFoundResponse("User not found");
     }
 
     return response.success(
@@ -169,7 +169,7 @@ async function getUser(request: Request, response: Response) {
         data: { user },
       },
       {
-        message: "User fetched successfully!",
+        message: "User fetched successfully",
       },
     );
   } catch (error) {
@@ -200,7 +200,7 @@ async function updateUser(request: Request, response: Response) {
     });
 
     if (!user) {
-      throw new NotFoundResponse("User not found!");
+      throw new NotFoundResponse("User not found");
     }
 
     return response.success(
@@ -208,7 +208,7 @@ async function updateUser(request: Request, response: Response) {
         data: { user },
       },
       {
-        message: "User updated successfully!",
+        message: "User updated successfully",
       },
     );
   } catch (error) {

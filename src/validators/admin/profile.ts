@@ -4,29 +4,29 @@ const updateProfileBodySchema = zod.object({
   pictureId: zod
     .string()
     .length(40, {
-      message: "Picture ID is invalid!",
+      message: "Picture ID is invalid",
     })
     .optional(),
   name: zod
     .string({
-      message: "Name must be a string!",
+      message: "Name must be a string",
     })
     .min(3, {
-      message: "Name must be at least 3 characters!",
+      message: "Name must be at least 3 characters",
     })
     .max(255, {
-      message: "Name must be at most 255 characters!",
+      message: "Name must be at most 255 characters",
     })
     .optional(),
   phone: zod
     .string({
-      message: "Phone must be a string!",
+      message: "Phone must be a string",
     })
     .min(3, {
-      message: "Phone must be at least 3 characters!",
+      message: "Phone must be at least 3 characters",
     })
     .max(255, {
-      message: "Phone must be at most 255 characters!",
+      message: "Phone must be at most 255 characters",
     })
     .optional(),
 });

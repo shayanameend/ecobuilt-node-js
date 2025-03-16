@@ -111,7 +111,7 @@ function handleErrors({
   response.internalServerError(
     {},
     {
-      message: "Something went wrong!",
+      message: "Something went wrong",
     },
   );
 

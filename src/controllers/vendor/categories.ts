@@ -21,7 +21,7 @@ async function createCategory(request: Request, response: Response) {
         data: { category },
       },
       {
-        message: "Category created successfully!",
+        message: "Category created successfully",
       },
     );
   } catch (error) {

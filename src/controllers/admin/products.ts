@@ -40,7 +40,7 @@ async function getProducts(request: Request, response: Response) {
             meta: { total: 0, pages: 1, limit, page },
           },
           {
-            message: "Products fetched successfully!",
+            message: "Products fetched successfully",
           },
         );
       }
@@ -59,7 +59,7 @@ async function getProducts(request: Request, response: Response) {
             meta: { total: 0, pages: 1, limit, page },
           },
           {
-            message: "Products fetched successfully!",
+            message: "Products fetched successfully",
           },
         );
       }
@@ -136,7 +136,7 @@ async function getProducts(request: Request, response: Response) {
         meta: { total, pages, limit, page },
       },
       {
-        message: "Products fetched successfully!",
+        message: "Products fetched successfully",
       },
     );
   } catch (error) {
@@ -166,7 +166,7 @@ async function getProduct(request: Request, response: Response) {
     });
 
     if (!product) {
-      throw new NotFoundResponse("Product not found!");
+      throw new NotFoundResponse("Product not found");
     }
 
     return response.success(
@@ -174,7 +174,7 @@ async function getProduct(request: Request, response: Response) {
         data: { product },
       },
       {
-        message: "Product fetched successfully!",
+        message: "Product fetched successfully",
       },
     );
   } catch (error) {
@@ -206,7 +206,7 @@ async function toggleProductIsDeleted(request: Request, response: Response) {
     });
 
     if (!product) {
-      throw new NotFoundResponse("Product not found!");
+      throw new NotFoundResponse("Product not found");
     }
 
     return response.success(

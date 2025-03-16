@@ -40,7 +40,7 @@ async function getOrders(request: Request, response: Response) {
             meta: { total: 0, pages: 1, limit, page },
           },
           {
-            message: "Orders fetched successfully!",
+            message: "Orders fetched successfully",
           },
         );
       }
@@ -61,7 +61,7 @@ async function getOrders(request: Request, response: Response) {
             meta: { total: 0, pages: 1, limit, page },
           },
           {
-            message: "Orders fetched successfully!",
+            message: "Orders fetched successfully",
           },
         );
       }
@@ -82,7 +82,7 @@ async function getOrders(request: Request, response: Response) {
             meta: { total: 0, pages: 1, limit, page },
           },
           {
-            message: "Orders fetched successfully!",
+            message: "Orders fetched successfully",
           },
         );
       }
@@ -178,7 +178,7 @@ async function getOrders(request: Request, response: Response) {
         meta: { total, pages, limit, page },
       },
       {
-        message: "Orders fetched successfully!",
+        message: "Orders fetched successfully",
       },
     );
   } catch (error) {
@@ -225,7 +225,7 @@ async function getOrder(request: Request, response: Response) {
     });
 
     if (!order) {
-      throw new NotFoundResponse("Order not found!");
+      throw new NotFoundResponse("Order not found");
     }
 
     return response.success(
@@ -233,7 +233,7 @@ async function getOrder(request: Request, response: Response) {
         data: { order },
       },
       {
-        message: "Order fetched successfully!",
+        message: "Order fetched successfully",
       },
     );
   } catch (error) {
@@ -287,7 +287,7 @@ async function toggleOrderStatus(request: Request, response: Response) {
     });
 
     if (!order) {
-      throw new NotFoundResponse("Order not found!");
+      throw new NotFoundResponse("Order not found");
     }
 
     return response.success(
@@ -295,7 +295,7 @@ async function toggleOrderStatus(request: Request, response: Response) {
         data: { order },
       },
       {
-        message: "Order status toggled successfully!",
+        message: "Order status toggled successfully",
       },
     );
   } catch (error) {

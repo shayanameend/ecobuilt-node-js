@@ -40,7 +40,7 @@ async function getOrders(request: Request, response: Response) {
             meta: { total: 0, pages: 1, limit, page },
           },
           {
-            message: "Orders fetched successfully!",
+            message: "Orders fetched successfully",
           },
         );
       }
@@ -66,7 +66,7 @@ async function getOrders(request: Request, response: Response) {
             meta: { total: 0, pages: 1, limit, page },
           },
           {
-            message: "Orders fetched successfully!",
+            message: "Orders fetched successfully",
           },
         );
       }
@@ -99,7 +99,7 @@ async function getOrders(request: Request, response: Response) {
             meta: { total: 0, pages: 1, limit, page },
           },
           {
-            message: "Orders fetched successfully!",
+            message: "Orders fetched successfully",
           },
         );
       }
@@ -113,7 +113,7 @@ async function getOrders(request: Request, response: Response) {
     });
 
     if (!user) {
-      throw new NotFoundResponse("Order not found!");
+      throw new NotFoundResponse("Order not found");
     }
 
     const where: Prisma.OrderWhereInput = {
@@ -199,7 +199,7 @@ async function getOrders(request: Request, response: Response) {
         data: { orders },
       },
       {
-        message: "Orders fetched successfully!",
+        message: "Orders fetched successfully",
       },
     );
   } catch (error) {
@@ -219,7 +219,7 @@ async function getOrder(request: Request, response: Response) {
     });
 
     if (!user) {
-      throw new NotFoundResponse("Order not found!");
+      throw new NotFoundResponse("Order not found");
     }
 
     const order = await prisma.order.findUnique({
@@ -253,7 +253,7 @@ async function getOrder(request: Request, response: Response) {
     });
 
     if (!order) {
-      throw new NotFoundResponse("Order not found!");
+      throw new NotFoundResponse("Order not found");
     }
 
     return response.success(
@@ -261,7 +261,7 @@ async function getOrder(request: Request, response: Response) {
         data: { order },
       },
       {
-        message: "Order fetched successfully!",
+        message: "Order fetched successfully",
       },
     );
   } catch (error) {
@@ -309,21 +309,21 @@ async function createOrder(request: Request, response: Response) {
     });
 
     if (products.length !== productsForOrder.length) {
-      throw new BadResponse("Failed to create order!");
+      throw new BadResponse("Failed to create order");
     }
 
     for (const productForOrder of productsForOrder) {
       const product = products.find((p) => p.id === productForOrder.productId);
 
       if (product && product.stock < productForOrder.quantity) {
-        throw new BadResponse("Failed to create order!");
+        throw new BadResponse("Failed to create order");
       }
     }
 
     const vendorIds = new Set(products.map((product) => product.vendor.id));
 
     if (vendorIds.size > 1) {
-      throw new BadResponse("Failed to create order!");
+      throw new BadResponse("Failed to create order");
     }
 
     const totalPrice = products.reduce((totalPrice, product) => {
@@ -342,7 +342,7 @@ async function createOrder(request: Request, response: Response) {
     });
 
     if (!user) {
-      throw new BadResponse("Failed to create order!");
+      throw new BadResponse("Failed to create order");
     }
 
     const order = await prisma.$transaction(async (tx) => {
@@ -383,7 +383,7 @@ async function createOrder(request: Request, response: Response) {
           );
 
           if (!productForOrder) {
-            throw new BadResponse("Failed to create order!");
+            throw new BadResponse("Failed to create order");
           }
 
           return {
@@ -406,7 +406,7 @@ async function createOrder(request: Request, response: Response) {
     });
 
     if (!order) {
-      throw new BadResponse("Failed to create order!");
+      throw new BadResponse("Failed to create order");
     }
 
     return response.success(
@@ -414,7 +414,7 @@ async function createOrder(request: Request, response: Response) {
         data: { order },
       },
       {
-        message: "Order created successfully!",
+        message: "Order created successfully",
       },
     );
   } catch (error) {
@@ -435,7 +435,7 @@ async function toggleOrderStatus(request: Request, response: Response) {
     });
 
     if (!user) {
-      throw new BadResponse("Failed to toggle order status!");
+      throw new BadResponse("Failed to toggle order status");
     }
 
     const order = await prisma.order.update({
@@ -477,7 +477,7 @@ async function toggleOrderStatus(request: Request, response: Response) {
     });
 
     if (!order) {
-      throw new NotFoundResponse("Order not found!");
+      throw new NotFoundResponse("Order not found");
     }
 
     return response.success(
@@ -485,7 +485,7 @@ async function toggleOrderStatus(request: Request, response: Response) {
         data: { order },
       },
       {
-        message: "Order status toggled successfully!",
+        message: "Order status toggled successfully",
       },
     );
   } catch (error) {

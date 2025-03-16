@@ -42,7 +42,7 @@ async function getProducts(request: Request, response: Response) {
             meta: { total: 0, pages: 1, limit, page },
           },
           {
-            message: "Products fetched successfully!",
+            message: "Products fetched successfully",
           },
         );
       }
@@ -62,7 +62,7 @@ async function getProducts(request: Request, response: Response) {
           meta: { total: 0, pages: 1, limit, page },
         },
         {
-          message: "Products fetched successfully!",
+          message: "Products fetched successfully",
         },
       );
     }
@@ -136,7 +136,7 @@ async function getProducts(request: Request, response: Response) {
         meta: { total, pages, limit, page },
       },
       {
-        message: "Products fetched successfully!",
+        message: "Products fetched successfully",
       },
     );
   } catch (error) {
@@ -156,7 +156,7 @@ async function getProduct(request: Request, response: Response) {
     });
 
     if (!vendor) {
-      throw new NotFoundResponse("Product not found!");
+      throw new NotFoundResponse("Product not found");
     }
 
     const product = await prisma.product.findUnique({
@@ -177,7 +177,7 @@ async function getProduct(request: Request, response: Response) {
     });
 
     if (!product) {
-      throw new NotFoundResponse("Product not found!");
+      throw new NotFoundResponse("Product not found");
     }
 
     return response.success(
@@ -185,7 +185,7 @@ async function getProduct(request: Request, response: Response) {
         data: { product },
       },
       {
-        message: "Product fetched successfully!",
+        message: "Product fetched successfully",
       },
     );
   } catch (error) {
@@ -210,7 +210,7 @@ async function createProduct(request: Request, response: Response) {
       });
 
       if (!category) {
-        throw new BadResponse("Failed to create product!");
+        throw new BadResponse("Failed to create product");
       }
     }
 
@@ -222,11 +222,11 @@ async function createProduct(request: Request, response: Response) {
     });
 
     if (!vendor) {
-      throw new BadResponse("Failed to create product!");
+      throw new BadResponse("Failed to create product");
     }
 
     if (!request.files || request.files.length === 0) {
-      throw new BadResponse("At least 1 picture is required!");
+      throw new BadResponse("At least 1 picture is required");
     }
 
     const pictureIds: string[] = [];
@@ -259,7 +259,7 @@ async function createProduct(request: Request, response: Response) {
         data: { product },
       },
       {
-        message: "Product created successfully!",
+        message: "Product created successfully",
       },
     );
   } catch (error) {
@@ -285,7 +285,7 @@ async function updateProduct(request: Request, response: Response) {
       });
 
       if (!category) {
-        throw new BadResponse("Failed to update product!");
+        throw new BadResponse("Failed to update product");
       }
     }
 
@@ -297,7 +297,7 @@ async function updateProduct(request: Request, response: Response) {
     });
 
     if (!vendor) {
-      throw new BadResponse("Failed to update product!");
+      throw new BadResponse("Failed to update product");
     }
 
     for (const pictureId of validatedData.pictureIds) {
@@ -343,7 +343,7 @@ async function updateProduct(request: Request, response: Response) {
     });
 
     if (!product) {
-      throw new NotFoundResponse("Product not found!");
+      throw new NotFoundResponse("Product not found");
     }
 
     return response.success(
@@ -351,7 +351,7 @@ async function updateProduct(request: Request, response: Response) {
         data: { product },
       },
       {
-        message: "Product updated successfully!",
+        message: "Product updated successfully",
       },
     );
   } catch (error) {
@@ -371,7 +371,7 @@ const deleteProduct = async (request: Request, response: Response) => {
     });
 
     if (!vendor) {
-      throw new NotFoundResponse("Product not found!");
+      throw new NotFoundResponse("Product not found");
     }
 
     const product = await prisma.product.update({
@@ -393,7 +393,7 @@ const deleteProduct = async (request: Request, response: Response) => {
     });
 
     if (!product) {
-      throw new NotFoundResponse("Product not found!");
+      throw new NotFoundResponse("Product not found");
     }
 
     return response.success(
@@ -401,7 +401,7 @@ const deleteProduct = async (request: Request, response: Response) => {
         data: { product },
       },
       {
-        message: "Product deleted successfully!",
+        message: "Product deleted successfully",
       },
     );
   } catch (error) {

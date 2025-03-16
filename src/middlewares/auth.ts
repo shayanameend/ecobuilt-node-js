@@ -35,13 +35,13 @@ function verifyRequest({
       const bearerToken = request.headers.authorization;
 
       if (!bearerToken) {
-        throw new UnauthorizedResponse("Unauthorized!");
+        throw new UnauthorizedResponse("Unauthorized");
       }
 
       const token = bearerToken.split(" ")[1];
 
       if (!token) {
-        throw new UnauthorizedResponse("Unauthorized!");
+        throw new UnauthorizedResponse("Unauthorized");
       }
 
       const decodedUser = (await verifyToken(token)) as {
@@ -50,7 +50,7 @@ function verifyRequest({
       };
 
       if (allowedTypes.length > 0 && !allowedTypes.includes(decodedUser.type)) {
-        throw new ForbiddenResponse("Forbidden!");
+        throw new ForbiddenResponse("Forbidden");
       }
 
       const user = await prisma.auth.findUnique({
@@ -70,15 +70,15 @@ function verifyRequest({
       });
 
       if (!user) {
-        throw new NotFoundResponse("User Not Found!");
+        throw new NotFoundResponse("User Not Found");
       }
 
       if (isVerified && !user?.isVerified) {
-        throw new BadResponse("User Not Verified!");
+        throw new BadResponse("User Not Verified");
       }
 
       if (isDeleted && user?.isDeleted) {
-        throw new BadResponse("User Deleted!");
+        throw new BadResponse("User Deleted");
       }
 
       if (
@@ -86,7 +86,7 @@ function verifyRequest({
         allowedStatus.length > 0 &&
         !allowedStatus.includes(user.status)
       ) {
-        throw new ForbiddenResponse("Forbidden!");
+        throw new ForbiddenResponse("Forbidden");
       }
 
       if (
@@ -94,7 +94,7 @@ function verifyRequest({
         allowedRoles.length > 0 &&
         !allowedRoles.includes(user.role)
       ) {
-        throw new ForbiddenResponse("Forbidden!");
+        throw new ForbiddenResponse("Forbidden");
       }
 
       request.user = user;
@@ -105,7 +105,7 @@ function verifyRequest({
         return response.unauthorized(
           {},
           {
-            message: "Token Expired!",
+            message: "Token Expired",
           },
         );
       }
@@ -114,7 +114,7 @@ function verifyRequest({
         return response.unauthorized(
           {},
           {
-            message: "Invalid Token!",
+            message: "Invalid Token",
           },
         );
       }

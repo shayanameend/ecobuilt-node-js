@@ -32,7 +32,7 @@ async function signUp(request: Request, response: Response) {
     });
 
     if (existingUser) {
-      throw new BadResponse("User Already Exists!");
+      throw new BadResponse("User Already Exists");
     }
 
     const hashedPassword = await argon.hash(password);
@@ -89,7 +89,7 @@ async function signUp(request: Request, response: Response) {
         data: { token },
       },
       {
-        message: "Sign Up Successfull!",
+        message: "Sign Up Successfull",
       },
     );
   } catch (error) {
@@ -114,13 +114,13 @@ async function signIn(request: Request, response: Response) {
     });
 
     if (!user) {
-      throw new NotFoundResponse("User Not Found!");
+      throw new NotFoundResponse("User Not Found");
     }
 
     const isPasswordValid = await argon.verify(user.password, password);
 
     if (!isPasswordValid) {
-      throw new BadResponse("Invalid Password!");
+      throw new BadResponse("Invalid Password");
     }
 
     if (!user.isVerified) {
@@ -168,7 +168,7 @@ async function signIn(request: Request, response: Response) {
           },
         },
         {
-          message: "OTP Sent Successfully!",
+          message: "OTP Sent Successfully",
         },
       );
     }
@@ -189,7 +189,7 @@ async function signIn(request: Request, response: Response) {
         },
       },
       {
-        message: "Sign In Successfull!",
+        message: "Sign In Successfull",
       },
     );
   } catch (error) {
@@ -213,7 +213,7 @@ async function forgotPassword(request: Request, response: Response) {
     });
 
     if (!user) {
-      throw new NotFoundResponse("User Not Found!");
+      throw new NotFoundResponse("User Not Found");
     }
 
     const sampleSpace = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -258,7 +258,7 @@ async function forgotPassword(request: Request, response: Response) {
         data: { token },
       },
       {
-        message: "OTP Sent Successfully!",
+        message: "OTP Sent Successfully",
       },
     );
   } catch (error) {
@@ -305,7 +305,7 @@ async function resendOtp(request: Request, response: Response) {
     return response.success(
       {},
       {
-        message: "OTP Sent Successfully!",
+        message: "OTP Sent Successfully",
       },
     );
   } catch (error) {
@@ -325,11 +325,11 @@ async function verifyOtp(request: Request, response: Response) {
     });
 
     if (!existingOtp) {
-      throw new BadResponse("Invalid OTP!");
+      throw new BadResponse("Invalid OTP");
     }
 
     if (existingOtp.code !== otp) {
-      throw new BadResponse("Invalid OTP!");
+      throw new BadResponse("Invalid OTP");
     }
 
     if (type === "VERIFY") {
@@ -369,7 +369,7 @@ async function verifyOtp(request: Request, response: Response) {
         },
       },
       {
-        message: "OTP Verified Successfully!",
+        message: "OTP Verified Successfully",
       },
     );
   } catch (error) {
@@ -396,7 +396,7 @@ async function updatePassword(request: Request, response: Response) {
         data: {},
       },
       {
-        message: "Password Updated Successfully!",
+        message: "Password Updated Successfully",
       },
     );
   } catch (error) {
@@ -419,7 +419,7 @@ async function refresh(request: Request, response: Response) {
         },
       },
       {
-        message: "Token Refreshed Successfully!",
+        message: "Token Refreshed Successfully",
       },
     );
   } catch (error) {

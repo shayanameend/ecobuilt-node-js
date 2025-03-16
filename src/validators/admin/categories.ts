@@ -5,10 +5,10 @@ import * as zod from "zod";
 const getCategoriesQuerySchema = zod.object({
   name: zod
     .string({
-      message: "Name must be a string!",
+      message: "Name must be a string",
     })
     .min(1, {
-      message: "Name must be at least 1 characters long!",
+      message: "Name must be at least 1 characters long",
     })
     .optional(),
   status: zod
@@ -19,7 +19,7 @@ const getCategoriesQuerySchema = zod.object({
         CategoryStatus.REJECTED,
       ],
       {
-        message: "Status must be one of 'PENDING', 'APPROVED', or 'REJECTED'!",
+        message: "Status must be one of 'PENDING', 'APPROVED', or 'REJECTED'",
       },
     )
     .optional(),
@@ -27,7 +27,7 @@ const getCategoriesQuerySchema = zod.object({
     .preprocess(
       (val) => (val === "true" ? true : val === "false" ? false : val),
       zod.boolean({
-        message: "isDeleted must be a boolean!",
+        message: "isDeleted must be a boolean",
       }),
     )
     .optional(),
@@ -36,13 +36,13 @@ const getCategoriesQuerySchema = zod.object({
 const createCategoryBodySchema = zod.object({
   name: zod
     .string({
-      message: "Name must be a string!",
+      message: "Name must be a string",
     })
     .min(3, {
-      message: "Name must be at least 3 characters long!",
+      message: "Name must be at least 3 characters long",
     })
     .max(255, {
-      message: "Name must be at most 255 characters long!",
+      message: "Name must be at most 255 characters long",
     }),
   status: zod
     .enum(
@@ -52,7 +52,7 @@ const createCategoryBodySchema = zod.object({
         CategoryStatus.REJECTED,
       ],
       {
-        message: "Status must be one of 'PENDING', 'APPROVED', or 'REJECTED'!",
+        message: "Status must be one of 'PENDING', 'APPROVED', or 'REJECTED'",
       },
     )
     .default(CategoryStatus.PENDING),
@@ -60,20 +60,20 @@ const createCategoryBodySchema = zod.object({
 
 const updateCategoryParamsSchema = zod.object({
   id: zod.string({
-    message: "ID must be a string!",
+    message: "ID must be a string",
   }),
 });
 
 const updateCategoryBodySchema = zod.object({
   name: zod
     .string({
-      message: "Name must be a string!",
+      message: "Name must be a string",
     })
     .min(3, {
-      message: "Name must be at least 3 characters long!",
+      message: "Name must be at least 3 characters long",
     })
     .max(255, {
-      message: "Name must be at most 255 characters long!",
+      message: "Name must be at most 255 characters long",
     })
     .optional(),
   status: zod
@@ -84,7 +84,7 @@ const updateCategoryBodySchema = zod.object({
         CategoryStatus.REJECTED,
       ],
       {
-        message: "Status must be one of 'PENDING', 'APPROVED', or 'REJECTED'!",
+        message: "Status must be one of 'PENDING', 'APPROVED', or 'REJECTED'",
       },
     )
     .optional(),
@@ -92,7 +92,7 @@ const updateCategoryBodySchema = zod.object({
 
 const toggleCategoryIsDeletedParamsSchema = zod.object({
   id: zod.string({
-    message: "ID must be a string!",
+    message: "ID must be a string",
   }),
 });
 
@@ -100,7 +100,7 @@ const toggleCategoryIsDeletedBodySchema = zod.object({
   isDeleted: zod.preprocess(
     (val) => (val === "true" ? true : val === "false" ? false : val),
     zod.boolean({
-      message: "isDeleted must be a boolean!",
+      message: "isDeleted must be a boolean",
     }),
   ),
 });

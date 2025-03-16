@@ -48,7 +48,7 @@ async function getCategories(request: Request, response: Response) {
         data: { categories },
       },
       {
-        message: "Categories fetched successfully!",
+        message: "Categories fetched successfully",
       },
     );
   } catch (error) {
@@ -72,7 +72,7 @@ async function createCategory(request: Request, response: Response) {
         data: { category },
       },
       {
-        message: "Category created successfully!",
+        message: "Category created successfully",
       },
     );
   } catch (error) {
@@ -94,7 +94,7 @@ async function updateCategory(request: Request, response: Response) {
     });
 
     if (!category) {
-      throw new NotFoundResponse("Category not found!");
+      throw new NotFoundResponse("Category not found");
     }
 
     return response.success(
@@ -102,7 +102,7 @@ async function updateCategory(request: Request, response: Response) {
         data: { category },
       },
       {
-        message: "Category updated successfully!",
+        message: "Category updated successfully",
       },
     );
   } catch (error) {
@@ -124,7 +124,7 @@ async function toggleCategoryIsDeleted(request: Request, response: Response) {
     });
 
     if (!category) {
-      throw new NotFoundResponse("Category not found!");
+      throw new NotFoundResponse("Category not found");
     }
 
     return response.success(

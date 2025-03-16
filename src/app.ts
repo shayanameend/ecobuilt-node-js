@@ -79,12 +79,12 @@ app.get(
     allowedStatus: ["APPROVED"],
   }),
   (_request, response) => {
-    response.success({}, { message: "Test route!" });
+    response.success({}, { message: "Test route" });
   },
 );
 
 app.all("*", (_request, response) => {
-  response.notFound({}, { message: "Not Found!" });
+  response.notFound({}, { message: "Not Found" });
 });
 
 app.use(
@@ -96,7 +96,7 @@ app.use(
   ) => {
     console.error(error);
 
-    response.internalServerError({}, { message: "Internal Server Error!" });
+    response.internalServerError({}, { message: "Internal Server Error" });
   },
 );
 
