@@ -25,6 +25,11 @@ const category = {
   isDeleted: true,
   createdAt: true,
   updatedAt: true,
+  _count: {
+    select: {
+      products: true,
+    },
+  },
 };
 
 export const adminSelector = {
