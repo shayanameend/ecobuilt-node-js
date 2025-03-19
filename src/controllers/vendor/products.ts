@@ -124,6 +124,16 @@ async function getProducts(request: Request, response: Response) {
       },
       select: {
         ...vendorSelector.product,
+        category: {
+          select: {
+            ...publicSelector.category,
+          },
+        },
+        vendor: {
+          select: {
+            ...vendorSelector.profile,
+          },
+        },
       },
     });
 
