@@ -3,7 +3,7 @@ import * as zod from "zod";
 const updateProfileBodySchema = zod.object({
   pictureId: zod
     .string()
-    .length(40, {
+    .min(36, {
       message: "Picture ID is invalid",
     })
     .optional(),

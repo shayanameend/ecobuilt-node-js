@@ -5,7 +5,7 @@ const updateProfileBodySchema = zod.object({
     .string({
       message: "Picture ID must be a string",
     })
-    .length(40, {
+    .min(36, {
       message: "Picture ID must be a 40-character string",
     })
     .optional(),
