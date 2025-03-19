@@ -26,9 +26,9 @@ const uploadOne = (fieldName: string) => {
   };
 };
 
-const uploadMultiple = (fieldName: string, maxCount = 5) => {
+const uploadMultiple = (fieldName: string) => {
   return (req: Request, res: Response, next: NextFunction) => {
-    upload.array(fieldName, maxCount)(req, res, (err) => {
+    upload.array(fieldName)(req, res, (err) => {
       if (err) {
         return res.status(400).json({
           success: false,
