@@ -2,7 +2,7 @@ import type { Request, Response } from "express";
 
 import { BadResponse, NotFoundResponse, handleErrors } from "~/lib/error";
 import { prisma } from "~/lib/prisma";
-import { publicSelector } from "~/selectors/public";
+import { adminSelector } from "~/selectors/admin";
 import { vendorSelector } from "~/selectors/vendor";
 import { addFile, removeFile } from "~/utils/file";
 import { updateProfileBodySchema } from "~/validators/vendor/profile";
@@ -17,7 +17,7 @@ async function getProfile(request: Request, response: Response) {
         ...vendorSelector.profile,
         auth: {
           select: {
-            ...publicSelector.auth,
+            ...adminSelector.auth,
           },
         },
       },
@@ -86,7 +86,7 @@ async function updateProfile(request: Request, response: Response) {
         ...vendorSelector.profile,
         auth: {
           select: {
-            ...publicSelector.auth,
+            ...adminSelector.auth,
           },
         },
       },

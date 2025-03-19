@@ -3,7 +3,6 @@ import type { Request, Response } from "express";
 import { BadResponse, NotFoundResponse, handleErrors } from "~/lib/error";
 import { prisma } from "~/lib/prisma";
 import { adminSelector } from "~/selectors/admin";
-import { publicSelector } from "~/selectors/public";
 import { addFile, removeFile } from "~/utils/file";
 import { updateProfileBodySchema } from "~/validators/admin/profile";
 
@@ -17,7 +16,7 @@ async function getProfile(request: Request, response: Response) {
         ...adminSelector.profile,
         auth: {
           select: {
-            ...publicSelector.auth,
+            ...adminSelector.auth,
           },
         },
       },
@@ -81,7 +80,7 @@ async function updateProfile(request: Request, response: Response) {
         ...adminSelector.profile,
         auth: {
           select: {
-            ...publicSelector.auth,
+            ...adminSelector.auth,
           },
         },
       },
