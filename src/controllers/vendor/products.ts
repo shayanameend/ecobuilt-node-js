@@ -235,8 +235,8 @@ async function createProduct(request: Request, response: Response) {
       throw new BadResponse("Failed to create product");
     }
 
-    if (!request.files || request.files.length === 0) {
-      throw new BadResponse("At least 1 picture is required");
+    if (!request.files) {
+      throw new BadResponse("Pictures are required");
     }
 
     const pictureIds: string[] = [];
@@ -324,10 +324,12 @@ async function updateProduct(request: Request, response: Response) {
         })
       )?.pictureIds ?? [];
 
-    for (const file of request.files as Express.Multer.File[]) {
-      const pictureId = addFile({ file });
+    if (request.files) {
+      for (const file of request.files as Express.Multer.File[]) {
+        const pictureId = addFile({ file });
 
-      pictureIds.push(pictureId);
+        pictureIds.push(pictureId);
+      }
     }
 
     pictureIds = pictureIds.filter(
