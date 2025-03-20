@@ -10,11 +10,6 @@ const category = {
   name: true,
   createdAt: true,
   updatedAt: true,
-  _count: {
-    select: {
-      products: true,
-    },
-  },
 };
 
 const product = {
