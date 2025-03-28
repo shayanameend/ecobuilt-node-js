@@ -55,7 +55,7 @@ const createCategoryBodySchema = zod.object({
         message: "Status must be one of 'PENDING', 'APPROVED', 'REJECTED'",
       },
     )
-    .default(CategoryStatus.PENDING),
+    .default(CategoryStatus.APPROVED),
 });
 
 const updateCategoryParamsSchema = zod.object({
