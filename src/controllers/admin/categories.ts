@@ -7,7 +7,7 @@ import { adminSelector } from "~/selectors/admin";
 import {
   createCategoryBodySchema,
   getCategoriesQuerySchema,
-  toggleCategoryIsDeletedBodySchema,
+  toggleCategoryIsDeletedQuerySchema,
   toggleCategoryIsDeletedParamsSchema,
   updateCategoryBodySchema,
   updateCategoryParamsSchema,
@@ -113,11 +113,13 @@ async function updateCategory(request: Request, response: Response) {
 async function toggleCategoryIsDeleted(request: Request, response: Response) {
   try {
     const { id } = toggleCategoryIsDeletedParamsSchema.parse(request.params);
-    const validatedData = toggleCategoryIsDeletedBodySchema.parse(request.body);
+    const { isDeleted } = toggleCategoryIsDeletedQuerySchema.parse(
+      request.query,
+    );
 
     const category = await prisma.category.update({
       where: { id },
-      data: validatedData,
+      data: { isDeleted },
       select: {
         ...adminSelector.category,
       },

@@ -9,7 +9,7 @@ import { vendorSelector } from "~/selectors/vendor";
 import {
   getProductParamsSchema,
   getProductsQuerySchema,
-  toggleProductIsDeletedBodySchema,
+  toggleProductIsDeletedQuerySchema,
   toggleProductIsDeletedParamsSchema,
 } from "~/validators/admin/products";
 
@@ -195,14 +195,14 @@ async function getProduct(request: Request, response: Response) {
 
 async function toggleProductIsDeleted(request: Request, response: Response) {
   try {
-    console.log(request.body);
-
     const { id } = toggleProductIsDeletedParamsSchema.parse(request.params);
-    const validatedData = toggleProductIsDeletedBodySchema.parse(request.body);
+    const { isDeleted } = toggleProductIsDeletedQuerySchema.parse(
+      request.query,
+    );
 
     const product = await prisma.product.update({
       where: { id },
-      data: validatedData,
+      data: { isDeleted },
       select: {
         ...vendorSelector.product,
         category: {

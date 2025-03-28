@@ -96,7 +96,7 @@ const toggleCategoryIsDeletedParamsSchema = zod.object({
   }),
 });
 
-const toggleCategoryIsDeletedBodySchema = zod.object({
+const toggleCategoryIsDeletedQuerySchema = zod.object({
   isDeleted: zod.preprocess(
     (val) => (val === "true" ? true : val === "false" ? false : val),
     zod.boolean({
@@ -111,5 +111,5 @@ export {
   updateCategoryParamsSchema,
   updateCategoryBodySchema,
   toggleCategoryIsDeletedParamsSchema,
-  toggleCategoryIsDeletedBodySchema,
+  toggleCategoryIsDeletedQuerySchema,
 };

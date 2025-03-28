@@ -109,7 +109,7 @@ const toggleProductIsDeletedParamsSchema = zod.object({
     }),
 });
 
-const toggleProductIsDeletedBodySchema = zod.object({
+const toggleProductIsDeletedQuerySchema = zod.object({
   isDeleted: zod.preprocess(
     (val) => (val === "true" ? true : val === "false" ? false : val),
     zod.boolean({
@@ -122,5 +122,5 @@ export {
   getProductsQuerySchema,
   getProductParamsSchema,
   toggleProductIsDeletedParamsSchema,
-  toggleProductIsDeletedBodySchema,
+  toggleProductIsDeletedQuerySchema,
 };
