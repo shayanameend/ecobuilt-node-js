@@ -4,6 +4,7 @@ import type { Request, Response } from "express";
 import { NotFoundResponse, handleErrors } from "~/lib/error";
 import { prisma } from "~/lib/prisma";
 import { adminSelector } from "~/selectors/admin";
+import { publicSelector } from "~/selectors/public";
 import { vendorSelector } from "~/selectors/vendor";
 import {
   getProductParamsSchema,
@@ -124,6 +125,16 @@ async function getProducts(request: Request, response: Response) {
       },
       select: {
         ...vendorSelector.product,
+        category: {
+          select: {
+            ...publicSelector.category,
+          },
+        },
+        vendor: {
+          select: {
+            ...vendorSelector.profile,
+          },
+        },
       },
     });
 
