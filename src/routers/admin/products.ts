@@ -12,6 +12,6 @@ productsRouter.get("/", getProducts);
 
 productsRouter.get("/:id", getProduct);
 
-productsRouter.delete("/:id", toggleProductIsDeleted);
+productsRouter.patch("/:id", toggleProductIsDeleted);
 
 export { productsRouter };

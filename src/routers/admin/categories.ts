@@ -15,6 +15,6 @@ categoriesRouter.post("/", createCategory);
 
 categoriesRouter.put("/:id", updateCategory);
 
-categoriesRouter.delete("/:id", toggleCategoryIsDeleted);
+categoriesRouter.patch("/:id", toggleCategoryIsDeleted);
 
 export { categoriesRouter };

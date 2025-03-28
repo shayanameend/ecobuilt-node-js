@@ -19,6 +19,6 @@ productsRouter.post("/", uploadMultiple("pictures"), createProduct);
 
 productsRouter.put("/:id", uploadMultiple("pictures"), updateProduct);
 
-productsRouter.delete("/:id", deleteProduct);
+productsRouter.patch("/:id", deleteProduct);
 
 export { productsRouter };

@@ -195,6 +195,8 @@ async function getProduct(request: Request, response: Response) {
 
 async function toggleProductIsDeleted(request: Request, response: Response) {
   try {
+    console.log(request.body);
+
     const { id } = toggleProductIsDeletedParamsSchema.parse(request.params);
     const validatedData = toggleProductIsDeletedBodySchema.parse(request.body);
 
