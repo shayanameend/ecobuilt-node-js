@@ -138,6 +138,10 @@ async function updateAdmin(request: Request, response: Response) {
     const { id } = updateAdminParamsSchema.parse(request.params);
     const validatedData = updateAdminBodySchema.parse(request.body);
 
+    if (request.user.id === id && validatedData.isDeleted) {
+      throw new NotFoundResponse("You are not authorized to delete this admin");
+    }
+
     const admin = await prisma.admin.update({
       where: { id },
       data: {
