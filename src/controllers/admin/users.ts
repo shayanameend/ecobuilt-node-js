@@ -91,9 +91,6 @@ async function getUsers(request: Request, response: Response) {
       where.auth = authWhere;
     }
 
-    console.log(authWhere);
-    console.log(where);
-
     const users = await prisma.user.findMany({
       where,
       take: limit,
