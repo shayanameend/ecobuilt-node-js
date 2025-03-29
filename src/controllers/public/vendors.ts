@@ -199,6 +199,16 @@ async function getVendor(request: Request, response: Response) {
           },
           select: {
             ...publicSelector.product,
+            category: {
+              select: {
+                ...publicSelector.category,
+              },
+            },
+            vendor: {
+              select: {
+                ...vendorSelector.profile,
+              },
+            },
           },
         },
       },
