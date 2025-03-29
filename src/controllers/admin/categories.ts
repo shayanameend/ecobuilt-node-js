@@ -7,8 +7,8 @@ import { adminSelector } from "~/selectors/admin";
 import {
   createCategoryBodySchema,
   getCategoriesQuerySchema,
-  toggleCategoryIsDeletedQuerySchema,
   toggleCategoryIsDeletedParamsSchema,
+  toggleCategoryIsDeletedQuerySchema,
   updateCategoryBodySchema,
   updateCategoryParamsSchema,
 } from "~/validators/admin/categories";

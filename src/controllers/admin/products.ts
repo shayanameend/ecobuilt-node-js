@@ -9,8 +9,8 @@ import { vendorSelector } from "~/selectors/vendor";
 import {
   getProductParamsSchema,
   getProductsQuerySchema,
-  toggleProductIsDeletedQuerySchema,
   toggleProductIsDeletedParamsSchema,
+  toggleProductIsDeletedQuerySchema,
 } from "~/validators/admin/products";
 
 async function getProducts(request: Request, response: Response) {
