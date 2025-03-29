@@ -26,13 +26,12 @@ async function getAdmins(request: Request, response: Response) {
     } = getAdminsQuerySchema.parse(request.query);
 
     const where: Prisma.AdminWhereInput = {};
+    const authWhere: Prisma.AuthWhereInput = {};
 
     if (email) {
-      where.auth = {
-        email: {
-          contains: email,
-          mode: "insensitive",
-        },
+      authWhere.email = {
+        contains: email,
+        mode: "insensitive",
       };
     }
 
@@ -51,21 +50,19 @@ async function getAdmins(request: Request, response: Response) {
     }
 
     if (status) {
-      where.auth = {
-        status,
-      };
+      authWhere.status = status;
     }
 
     if (isVerified !== undefined) {
-      where.auth = {
-        isVerified,
-      };
+      authWhere.isVerified = isVerified;
     }
 
     if (isDeleted !== undefined) {
-      where.auth = {
-        isDeleted,
-      };
+      authWhere.isDeleted = isDeleted;
+    }
+
+    if (Object.keys(authWhere).length > 0) {
+      where.auth = authWhere;
     }
 
     const admins = await prisma.admin.findMany({
