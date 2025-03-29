@@ -31,13 +31,12 @@ async function getUsers(request: Request, response: Response) {
     } = getUsersQuerySchema.parse(request.query);
 
     const where: Prisma.UserWhereInput = {};
+    const authWhere: Prisma.AuthWhereInput = {};
 
     if (email) {
-      where.auth = {
-        email: {
-          contains: email,
-          mode: "insensitive",
-        },
+      authWhere.email = {
+        contains: email,
+        mode: "insensitive",
       };
     }
 
@@ -77,22 +76,23 @@ async function getUsers(request: Request, response: Response) {
     }
 
     if (status) {
-      where.auth = {
-        status,
-      };
+      authWhere.status = status;
     }
 
     if (isVerified !== undefined) {
-      where.auth = {
-        isVerified,
-      };
+      authWhere.isVerified = isVerified;
     }
 
     if (isDeleted !== undefined) {
-      where.auth = {
-        isDeleted,
-      };
+      authWhere.isDeleted = isDeleted;
     }
+
+    if (Object.keys(authWhere).length > 0) {
+      where.auth = authWhere;
+    }
+
+    console.log(authWhere);
+    console.log(where);
 
     const users = await prisma.user.findMany({
       where,
