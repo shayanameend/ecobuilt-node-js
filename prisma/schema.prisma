@@ -77,15 +77,13 @@ model Admin {
 model Vendor {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
-  pictureId       String  @map("picture_url")
-  name            String
-  description     String
-  phone           String
-  postalCode      String  @map("postal_code")
-  city            String
-  pickupAddress   String  @map("pickup_address")
-  stripeAccountId String? @map("stripe_account_id")
-  stripeEnabled   Boolean @default(false) @map("stripe_enabled")
+  pictureId     String @map("picture_url")
+  name          String
+  description   String
+  phone         String
+  postalCode    String @map("postal_code")
+  city          String
+  pickupAddress String @map("pickup_address")
 
   authId String @unique @map("user_id") @db.ObjectId
   auth   Auth   @relation(fields: [authId], references: [id], onDelete: Cascade, onUpdate: Cascade)
@@ -180,11 +178,9 @@ enum PaymentStatus {
 model Order {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
-  totalPrice            Float         @map("total_price")
-  status                OrderStatus   @default(PENDING)
-  paymentStatus         PaymentStatus @default(PENDING) @map("payment_status")
-  stripePaymentIntentId String?       @map("stripe_payment_intent_id")
-  stripeTransferId      String?       @map("stripe_transfer_id")
+  totalPrice    Float         @map("total_price")
+  status        OrderStatus   @default(PENDING)
+  paymentStatus PaymentStatus @default(PENDING) @map("payment_status")
 
   orderToProduct OrderToProduct[]
   review         Review?
