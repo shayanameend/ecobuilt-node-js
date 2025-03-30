@@ -3,11 +3,11 @@ import type { Request, Response } from "express";
 import { handleErrors } from "~/lib/error";
 import { prisma } from "~/lib/prisma";
 import { publicSelector } from "~/selectors/public";
-import { createCategoryBodySchema } from "~/validators/vendor/categories";
+import { suggestCategoryBodySchema } from "~/validators/vendor/categories";
 
-async function createCategory(request: Request, response: Response) {
+async function suggestCategory(request: Request, response: Response) {
   try {
-    const validatedData = createCategoryBodySchema.parse(request.body);
+    const validatedData = suggestCategoryBodySchema.parse(request.body);
 
     const category = await prisma.category.create({
       data: validatedData,
@@ -21,7 +21,7 @@ async function createCategory(request: Request, response: Response) {
         data: { category },
       },
       {
-        message: "Category created successfully",
+        message: "Category suggested successfully",
       },
     );
   } catch (error) {
@@ -29,4 +29,4 @@ async function createCategory(request: Request, response: Response) {
   }
 }
 
-export { createCategory };
+export { suggestCategory };

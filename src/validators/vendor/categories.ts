@@ -1,6 +1,6 @@
 import * as zod from "zod";
 
-const createCategoryBodySchema = zod.object({
+const suggestCategoryBodySchema = zod.object({
   name: zod
     .string({
       message: "Name must be a string",
@@ -13,4 +13,4 @@ const createCategoryBodySchema = zod.object({
     }),
 });
 
-export { createCategoryBodySchema };
+export { suggestCategoryBodySchema };

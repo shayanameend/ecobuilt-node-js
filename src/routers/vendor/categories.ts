@@ -1,9 +1,9 @@
 import { Router } from "express";
 
-import { createCategory } from "~/controllers/vendor/categories";
+import { suggestCategory } from "~/controllers/vendor/categories";
 
 const categoriesRouter = Router();
 
-categoriesRouter.post("/", createCategory);
+categoriesRouter.post("/", suggestCategory);
 
 export { categoriesRouter };
