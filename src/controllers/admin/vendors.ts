@@ -249,6 +249,16 @@ async function getVendor(request: Request, response: Response) {
           },
           select: {
             ...vendorSelector.product,
+            category: {
+              select: {
+                ...adminSelector.category,
+              },
+            },
+            vendor: {
+              select: {
+                ...vendorSelector.profile,
+              },
+            },
           },
         },
       },

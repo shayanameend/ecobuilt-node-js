@@ -139,21 +139,6 @@ async function getUser(request: Request, response: Response) {
             ...adminSelector.auth,
           },
         },
-        orders: {
-          select: {
-            ...publicSelector.order,
-            orderToProduct: {
-              select: {
-                ...publicSelector.orderToProduct,
-                product: {
-                  select: {
-                    ...publicSelector.product,
-                  },
-                },
-              },
-            },
-          },
-        },
       },
     });
 
