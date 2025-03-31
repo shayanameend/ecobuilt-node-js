@@ -125,19 +125,19 @@ async function getOrders(request: Request, response: Response) {
     }
 
     if (minPrice !== undefined) {
-      where.price = {
+      where.totalPrice = {
         gte: minPrice,
       };
     }
 
     if (maxPrice !== undefined) {
-      where.price = {
+      where.totalPrice = {
         lte: maxPrice,
       };
     }
 
     if (minPrice !== undefined && maxPrice !== undefined) {
-      where.price = {
+      where.totalPrice = {
         gte: minPrice,
         lte: maxPrice,
       };
@@ -349,7 +349,7 @@ async function createOrder(request: Request, response: Response) {
       const newOrder = await tx.order.create({
         data: {
           userId: user.id,
-          price: totalPrice,
+          totalPrice: totalPrice,
         },
         select: {
           ...publicSelector.order,

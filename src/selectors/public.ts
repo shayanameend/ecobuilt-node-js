@@ -27,7 +27,7 @@ const product = {
 
 const order = {
   id: true,
-  price: true,
+  totalPrice: true,
   status: true,
 };
 
