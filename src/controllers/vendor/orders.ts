@@ -45,13 +45,16 @@ async function getOrders(request: Request, response: Response) {
       );
     }
 
-    if (categoryId) {
-      const category = await prisma.category.findUnique({
-        where: { id: categoryId, status: "APPROVED", isDeleted: false },
+    if (productId) {
+      const product = await prisma.product.findUnique({
+        where: {
+          id: productId,
+          vendorId: vendor.id,
+        },
         select: { id: true },
       });
 
-      if (!category) {
+      if (!product) {
         return response.success(
           {
             data: { orders: [] },
@@ -64,16 +67,13 @@ async function getOrders(request: Request, response: Response) {
       }
     }
 
-    if (productId) {
-      const product = await prisma.product.findUnique({
-        where: {
-          id: productId,
-          vendorId: vendor.id,
-        },
+    if (categoryId) {
+      const category = await prisma.category.findUnique({
+        where: { id: categoryId, status: "APPROVED", isDeleted: false },
         select: { id: true },
       });
 
-      if (!product) {
+      if (!category) {
         return response.success(
           {
             data: { orders: [] },
@@ -119,20 +119,20 @@ async function getOrders(request: Request, response: Response) {
       };
     }
 
+    if (productId) {
+      where.orderToProduct = {
+        some: {
+          productId,
+        },
+      };
+    }
+
     if (categoryId) {
       where.orderToProduct = {
         some: {
           product: {
             categoryId,
           },
-        },
-      };
-    }
-
-    if (productId) {
-      where.orderToProduct = {
-        some: {
-          productId,
         },
       };
     }
@@ -152,7 +152,7 @@ async function getOrders(request: Request, response: Response) {
             ...publicSelector.orderToProduct,
             product: {
               select: {
-                ...publicSelector.product,
+                ...vendorSelector.product,
               },
             },
           },
@@ -215,7 +215,7 @@ async function getOrder(request: Request, response: Response) {
             ...publicSelector.orderToProduct,
             product: {
               select: {
-                ...publicSelector.product,
+                ...vendorSelector.product,
                 category: {
                   select: {
                     ...publicSelector.category,
@@ -281,9 +281,6 @@ async function toggleOrderStatus(request: Request, response: Response) {
             },
           },
         },
-        status: {
-          notIn: ["PROCESSING", "IN_TRANSIT"],
-        },
       },
       data: {
         status,
@@ -295,7 +292,7 @@ async function toggleOrderStatus(request: Request, response: Response) {
             ...publicSelector.orderToProduct,
             product: {
               select: {
-                ...publicSelector.product,
+                ...vendorSelector.product,
                 category: {
                   select: {
                     ...publicSelector.category,
