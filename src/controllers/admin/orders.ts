@@ -3,6 +3,7 @@ import type { Request, Response } from "express";
 
 import { NotFoundResponse, handleErrors } from "~/lib/error";
 import { prisma } from "~/lib/prisma";
+import { adminSelector } from "~/selectors/admin";
 import { publicSelector } from "~/selectors/public";
 import { userSelector } from "~/selectors/user";
 import { vendorSelector } from "~/selectors/vendor";
@@ -27,13 +28,15 @@ async function getOrders(request: Request, response: Response) {
       productId,
     } = getOrdersQuerySchema.parse(request.query);
 
-    if (categoryId) {
-      const category = await prisma.category.findUnique({
-        where: { id: categoryId },
+    if (productId) {
+      const product = await prisma.product.findUnique({
+        where: {
+          id: productId,
+        },
         select: { id: true },
       });
 
-      if (!category) {
+      if (!product) {
         return response.success(
           {
             data: { orders: [] },
@@ -67,15 +70,13 @@ async function getOrders(request: Request, response: Response) {
       }
     }
 
-    if (productId) {
-      const product = await prisma.product.findUnique({
-        where: {
-          id: productId,
-        },
+    if (categoryId) {
+      const category = await prisma.category.findUnique({
+        where: { id: categoryId },
         select: { id: true },
       });
 
-      if (!product) {
+      if (!category) {
         return response.success(
           {
             data: { orders: [] },
@@ -113,12 +114,10 @@ async function getOrders(request: Request, response: Response) {
       };
     }
 
-    if (categoryId) {
+    if (productId) {
       where.orderToProduct = {
         some: {
-          product: {
-            categoryId,
-          },
+          productId,
         },
       };
     }
@@ -133,10 +132,12 @@ async function getOrders(request: Request, response: Response) {
       };
     }
 
-    if (productId) {
+    if (categoryId) {
       where.orderToProduct = {
         some: {
-          productId,
+          product: {
+            categoryId,
+          },
         },
       };
     }
@@ -156,7 +157,7 @@ async function getOrders(request: Request, response: Response) {
             ...publicSelector.orderToProduct,
             product: {
               select: {
-                ...publicSelector.product,
+                ...vendorSelector.product,
               },
             },
           },
@@ -201,10 +202,10 @@ async function getOrder(request: Request, response: Response) {
             ...publicSelector.orderToProduct,
             product: {
               select: {
-                ...publicSelector.product,
+                ...vendorSelector.product,
                 category: {
                   select: {
-                    ...publicSelector.category,
+                    ...adminSelector.category,
                   },
                 },
                 vendor: {
@@ -249,9 +250,6 @@ async function toggleOrderStatus(request: Request, response: Response) {
     const order = await prisma.order.update({
       where: {
         id,
-        status: {
-          notIn: ["PENDING", "REJECTED", "CANCELLED", "RETURNED"],
-        },
       },
       data: {
         status,
@@ -263,10 +261,10 @@ async function toggleOrderStatus(request: Request, response: Response) {
             ...publicSelector.orderToProduct,
             product: {
               select: {
-                ...publicSelector.product,
+                ...vendorSelector.product,
                 category: {
                   select: {
-                    ...publicSelector.category,
+                    ...adminSelector.category,
                   },
                 },
                 vendor: {
