@@ -27,13 +27,27 @@ async function getOrders(request: Request, response: Response) {
       productId,
     } = getOrdersQuerySchema.parse(request.query);
 
-    if (categoryId) {
-      const category = await prisma.category.findUnique({
-        where: { id: categoryId, status: "APPROVED", isDeleted: false },
+    if (productId) {
+      const product = await prisma.product.findUnique({
+        where: {
+          id: productId,
+          isDeleted: false,
+          category: {
+            status: "APPROVED",
+            isDeleted: false,
+          },
+          vendor: {
+            auth: {
+              status: "APPROVED",
+              isVerified: true,
+              isDeleted: false,
+            },
+          },
+        },
         select: { id: true },
       });
 
-      if (!category) {
+      if (!product) {
         return response.success(
           {
             data: { orders: [] },
@@ -72,27 +86,13 @@ async function getOrders(request: Request, response: Response) {
       }
     }
 
-    if (productId) {
-      const product = await prisma.product.findUnique({
-        where: {
-          id: productId,
-          isDeleted: false,
-          category: {
-            status: "APPROVED",
-            isDeleted: false,
-          },
-          vendor: {
-            auth: {
-              status: "APPROVED",
-              isVerified: true,
-              isDeleted: false,
-            },
-          },
-        },
+    if (categoryId) {
+      const category = await prisma.category.findUnique({
+        where: { id: categoryId, status: "APPROVED", isDeleted: false },
         select: { id: true },
       });
 
-      if (!product) {
+      if (!category) {
         return response.success(
           {
             data: { orders: [] },
@@ -143,6 +143,14 @@ async function getOrders(request: Request, response: Response) {
       };
     }
 
+    if (productId) {
+      where.orderToProduct = {
+        some: {
+          productId,
+        },
+      };
+    }
+
     if (categoryId) {
       where.orderToProduct = {
         some: {
@@ -159,14 +167,6 @@ async function getOrders(request: Request, response: Response) {
           product: {
             vendorId,
           },
-        },
-      };
-    }
-
-    if (productId) {
-      where.orderToProduct = {
-        some: {
-          productId,
         },
       };
     }
@@ -443,9 +443,6 @@ async function toggleOrderStatus(request: Request, response: Response) {
         id,
         user: {
           id: user.id,
-        },
-        status: {
-          in: ["PENDING"],
         },
       },
       data: {
