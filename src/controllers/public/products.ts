@@ -24,25 +24,6 @@ async function getProducts(request: Request, response: Response) {
       vendorId,
     } = getProductsQuerySchema.parse(request.query);
 
-    if (categoryId) {
-      const category = await prisma.category.findUnique({
-        where: { id: categoryId, status: "APPROVED", isDeleted: false },
-        select: { id: true },
-      });
-
-      if (!category) {
-        return response.success(
-          {
-            data: { products: [] },
-            meta: { total: 0, pages: 1, limit, page },
-          },
-          {
-            message: "Products fetched successfully",
-          },
-        );
-      }
-    }
-
     if (vendorId) {
       const vendor = await prisma.vendor.findUnique({
         where: {
@@ -69,8 +50,38 @@ async function getProducts(request: Request, response: Response) {
       }
     }
 
+    if (categoryId) {
+      const category = await prisma.category.findUnique({
+        where: { id: categoryId, status: "APPROVED", isDeleted: false },
+        select: { id: true },
+      });
+
+      if (!category) {
+        return response.success(
+          {
+            data: { products: [] },
+            meta: { total: 0, pages: 1, limit, page },
+          },
+          {
+            message: "Products fetched successfully",
+          },
+        );
+      }
+    }
+
     const where: Prisma.ProductWhereInput = {
       isDeleted: false,
+      category: {
+        status: "APPROVED",
+        isDeleted: false,
+      },
+      vendor: {
+        auth: {
+          status: "APPROVED",
+          isVerified: true,
+          isDeleted: false,
+        },
+      },
     };
 
     if (name) {

@@ -29,25 +29,6 @@ async function getProducts(request: Request, response: Response) {
       categoryId,
     } = getProductsQuerySchema.parse(request.query);
 
-    if (categoryId) {
-      const category = await prisma.category.findUnique({
-        where: { id: categoryId, status: "APPROVED", isDeleted: false },
-        select: { id: true },
-      });
-
-      if (!category) {
-        return response.success(
-          {
-            data: { products: [] },
-            meta: { total: 0, pages: 1, limit, page },
-          },
-          {
-            message: "Products fetched successfully",
-          },
-        );
-      }
-    }
-
     const vendor = await prisma.vendor.findUnique({
       where: { authId: request.user.id },
       select: {
@@ -65,6 +46,25 @@ async function getProducts(request: Request, response: Response) {
           message: "Products fetched successfully",
         },
       );
+    }
+
+    if (categoryId) {
+      const category = await prisma.category.findUnique({
+        where: { id: categoryId, status: "APPROVED", isDeleted: false },
+        select: { id: true },
+      });
+
+      if (!category) {
+        return response.success(
+          {
+            data: { products: [] },
+            meta: { total: 0, pages: 1, limit, page },
+          },
+          {
+            message: "Products fetched successfully",
+          },
+        );
+      }
     }
 
     const where: Prisma.ProductWhereInput = {
@@ -207,6 +207,17 @@ async function createProduct(request: Request, response: Response) {
   try {
     const validatedData = createProductBodySchema.parse(request.body);
 
+    const vendor = await prisma.vendor.findUnique({
+      where: { authId: request.user.id },
+      select: {
+        id: true,
+      },
+    });
+
+    if (!vendor) {
+      throw new BadResponse("Failed to create product");
+    }
+
     if (validatedData.categoryId) {
       const category = await prisma.category.findUnique({
         where: {
@@ -222,17 +233,6 @@ async function createProduct(request: Request, response: Response) {
       if (!category) {
         throw new BadResponse("Failed to create product");
       }
-    }
-
-    const vendor = await prisma.vendor.findUnique({
-      where: { authId: request.user.id },
-      select: {
-        id: true,
-      },
-    });
-
-    if (!vendor) {
-      throw new BadResponse("Failed to create product");
     }
 
     if (!request.files) {
@@ -282,6 +282,17 @@ async function updateProduct(request: Request, response: Response) {
     const { id } = updateProductParamsSchema.parse(request.params);
     const validatedData = updateProductBodySchema.parse(request.body);
 
+    const vendor = await prisma.vendor.findUnique({
+      where: { authId: request.user.id },
+      select: {
+        id: true,
+      },
+    });
+
+    if (!vendor) {
+      throw new BadResponse("Failed to update product");
+    }
+
     if (validatedData.categoryId) {
       const category = await prisma.category.findUnique({
         where: {
@@ -297,17 +308,6 @@ async function updateProduct(request: Request, response: Response) {
       if (!category) {
         throw new BadResponse("Failed to update product");
       }
-    }
-
-    const vendor = await prisma.vendor.findUnique({
-      where: { authId: request.user.id },
-      select: {
-        id: true,
-      },
-    });
-
-    if (!vendor) {
-      throw new BadResponse("Failed to update product");
     }
 
     for (const pictureId of validatedData.pictureIds) {
