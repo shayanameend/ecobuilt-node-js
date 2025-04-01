@@ -45,12 +45,28 @@ const getVendorsQuerySchema = zod.object({
     })
     .optional(),
   categoryId: zod
-    .string({
-      message: "Category ID must be a string",
-    })
-    .length(24, {
-      message: "Category ID must be a 24-character string",
-    })
+    .union([
+      zod
+        .string({
+          message: "Category ID must be a string",
+        })
+        .length(24, {
+          message: "Category ID must be a 24-character string",
+        }),
+      zod
+        .array(
+          zod
+            .string({
+              message: "Category ID must be a string",
+            })
+            .length(24, {
+              message: "Category ID must be a 24-character string",
+            }),
+        )
+        .nonempty({
+          message: "At least one category ID must be provided",
+        }),
+    ])
     .optional(),
 });
 
@@ -128,12 +144,28 @@ const getVendorQuerySchema = zod.object({
     })
     .optional(),
   categoryId: zod
-    .string({
-      message: "Category ID must be a string",
-    })
-    .length(24, {
-      message: "Category ID must be a 24-character string",
-    })
+    .union([
+      zod
+        .string({
+          message: "Category ID must be a string",
+        })
+        .length(24, {
+          message: "Category ID must be a 24-character string",
+        }),
+      zod
+        .array(
+          zod
+            .string({
+              message: "Category ID must be a string",
+            })
+            .length(24, {
+              message: "Category ID must be a 24-character string",
+            }),
+        )
+        .nonempty({
+          message: "At least one category ID must be provided",
+        }),
+    ])
     .optional(),
 });
 

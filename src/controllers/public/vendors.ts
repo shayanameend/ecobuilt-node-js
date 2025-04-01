@@ -16,13 +16,25 @@ async function getVendors(request: Request, response: Response) {
     const { page, limit, sort, name, city, categoryId } =
       getVendorsQuerySchema.parse(request.query);
 
-    if (categoryId) {
-      const category = await prisma.category.findUnique({
-        where: { id: categoryId, status: "APPROVED", isDeleted: false },
+    // Convert categoryId to array format for consistent handling
+    const categoryIds = categoryId
+      ? Array.isArray(categoryId)
+        ? categoryId
+        : [categoryId]
+      : [];
+
+    if (categoryIds.length > 0) {
+      // Verify all categories exist
+      const categories = await prisma.category.findMany({
+        where: {
+          id: { in: categoryIds },
+          status: "APPROVED",
+          isDeleted: false,
+        },
         select: { id: true },
       });
 
-      if (!category) {
+      if (categories.length === 0) {
         return response.success(
           {
             data: { vendors: [] },
@@ -57,10 +69,10 @@ async function getVendors(request: Request, response: Response) {
       };
     }
 
-    if (categoryId) {
+    if (categoryIds.length > 0) {
       where.products = {
         some: {
-          categoryId,
+          categoryId: { in: categoryIds },
         },
       };
     }
@@ -119,13 +131,25 @@ async function getVendor(request: Request, response: Response) {
       categoryId,
     } = getVendorQuerySchema.parse(request.query);
 
-    if (categoryId) {
-      const category = await prisma.category.findUnique({
-        where: { id: categoryId, status: "APPROVED", isDeleted: false },
+    // Convert categoryId to array format for consistent handling
+    const categoryIds = categoryId
+      ? Array.isArray(categoryId)
+        ? categoryId
+        : [categoryId]
+      : [];
+
+    if (categoryIds.length > 0) {
+      // Verify all categories exist
+      const categories = await prisma.category.findMany({
+        where: {
+          id: { in: categoryIds },
+          status: "APPROVED",
+          isDeleted: false,
+        },
         select: { id: true },
       });
 
-      if (!category) {
+      if (categories.length === 0) {
         throw new NotFoundResponse("Vendor not found");
       }
     }
@@ -177,8 +201,8 @@ async function getVendor(request: Request, response: Response) {
       };
     }
 
-    if (categoryId) {
-      where.categoryId = categoryId;
+    if (categoryIds.length > 0) {
+      where.categoryId = { in: categoryIds };
     }
 
     const vendor = await prisma.vendor.findUnique({
