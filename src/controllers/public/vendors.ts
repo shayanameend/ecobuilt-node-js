@@ -16,15 +16,15 @@ async function getVendors(request: Request, response: Response) {
     const { page, limit, sort, name, city, categoryId } =
       getVendorsQuerySchema.parse(request.query);
 
-    // Convert categoryId to array format for consistent handling
     const categoryIds = categoryId
       ? Array.isArray(categoryId)
         ? categoryId
         : [categoryId]
       : [];
 
+    console.log({ categoryIds });
+
     if (categoryIds.length > 0) {
-      // Verify all categories exist
       const categories = await prisma.category.findMany({
         where: {
           id: { in: categoryIds },
@@ -69,12 +69,57 @@ async function getVendors(request: Request, response: Response) {
       };
     }
 
+    let vendorIds: string[] = [];
+
     if (categoryIds.length > 0) {
-      where.products = {
-        some: {
-          categoryId: { in: categoryIds },
+      const vendorsWithProducts = await prisma.vendor.findMany({
+        where: {
+          auth: {
+            status: "APPROVED",
+            isVerified: true,
+            isDeleted: false,
+          },
+          products: {
+            some: {
+              categoryId: { in: categoryIds },
+            },
+          },
         },
-      };
+        select: {
+          id: true,
+          products: {
+            where: {
+              categoryId: { in: categoryIds },
+            },
+            select: {
+              categoryId: true,
+            },
+          },
+        },
+      });
+
+      vendorIds = vendorsWithProducts
+        .filter((vendor) => {
+          const uniqueCategoryIds = new Set(
+            vendor.products.map((product) => product.categoryId),
+          );
+          return categoryIds.every((catId) => uniqueCategoryIds.has(catId));
+        })
+        .map((vendor) => vendor.id);
+
+      if (vendorIds.length === 0) {
+        return response.success(
+          {
+            data: { vendors: [] },
+            meta: { total: 0, pages: 1, limit, page },
+          },
+          {
+            message: "Vendors fetched successfully",
+          },
+        );
+      }
+
+      where.id = { in: vendorIds };
     }
 
     const vendors = await prisma.vendor.findMany({
@@ -131,7 +176,6 @@ async function getVendor(request: Request, response: Response) {
       categoryId,
     } = getVendorQuerySchema.parse(request.query);
 
-    // Convert categoryId to array format for consistent handling
     const categoryIds = categoryId
       ? Array.isArray(categoryId)
         ? categoryId
@@ -139,7 +183,6 @@ async function getVendor(request: Request, response: Response) {
       : [];
 
     if (categoryIds.length > 0) {
-      // Verify all categories exist
       const categories = await prisma.category.findMany({
         where: {
           id: { in: categoryIds },
