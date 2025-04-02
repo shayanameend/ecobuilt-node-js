@@ -16,8 +16,8 @@ const envSchema = zod.object({
   NODEMAILER_SECURE: zod.preprocess(
     (val) => (val === "true" ? true : val === "false" ? false : val),
     zod.boolean({
-      message: "isDeleted must be a boolean",
-    }),
+      message: "NODEMAILER_SECURE must be a boolean",
+    })
   ),
   NODEMAILER_EMAIL: zod.string().email(),
   NODEMAILER_PASSWORD: zod.string(),
@@ -29,13 +29,6 @@ const envSchema = zod.object({
   AWS_SECRET_ACCESS_KEY: zod.string(),
   AWS_BUCKET: zod.string(),
   AWS_REGION: zod.string(),
-  // STRIPE_SECRET_KEY: zod.string(),
-  // STRIPE_WEBHOOK_SECRET_KEY: zod.string(),
-  // STRIPE_PRO_PRICE_ID: zod.string(),
-  // STRIPE_ENTERPRISE_PRICE_ID: zod.string(),
-  // STRIPE_SUCCESS_ENDPOINT: zod.string(),
-  // STRIPE_CANCEL_ENDPOINT: zod.string(),
-  // STRIPE_RETURN_ENDPOINT: zod.string(),
 });
 
 export const env = envSchema.parse(process.env);
