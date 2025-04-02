@@ -12,7 +12,7 @@ import {
 async function getReviews(request: Request, response: Response) {
   try {
     const { productId } = getReviewsParamsSchema.parse(request.params);
-    const { page, limit, sort } = getReviewsQuerySchema.parse(request.query);
+    const { limit, sort } = getReviewsQuerySchema.parse(request.query);
 
     const product = await prisma.product.findUnique({
       where: {
@@ -27,7 +27,7 @@ async function getReviews(request: Request, response: Response) {
       return response.success(
         {
           data: { reviews: [] },
-          meta: { total: 0, pages: 1, limit, page },
+          meta: { total: 0, limit },
         },
         {
           message: "Reviews fetched successfully",
@@ -50,7 +50,6 @@ async function getReviews(request: Request, response: Response) {
     const reviews = await prisma.review.findMany({
       where,
       take: limit,
-      skip: (page - 1) * limit,
       orderBy: {
         ...(sort === "LATEST" && { createdAt: "desc" }),
         ...(sort === "OLDEST" && { createdAt: "asc" }),
@@ -61,12 +60,11 @@ async function getReviews(request: Request, response: Response) {
     });
 
     const total = await prisma.review.count({ where });
-    const pages = Math.ceil(total / limit);
 
     return response.success(
       {
         data: { reviews },
-        meta: { total, pages, limit, page },
+        meta: { total, limit },
       },
       {
         message: "Reviews fetched successfully",
