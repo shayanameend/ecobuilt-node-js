@@ -53,7 +53,7 @@ async function getAdmins(request: Request, response: Response) {
       },
       {
         message: "Admins fetched successfully",
-      }
+      },
     );
   } catch (error) {
     handleErrors({ response, error });
@@ -74,7 +74,7 @@ async function getAdmin(request: Request, response: Response) {
       },
       {
         message: "Admin fetched successfully",
-      }
+      },
     );
   } catch (error) {
     handleErrors({ response, error });
@@ -97,7 +97,7 @@ async function updateAdmin(request: Request, response: Response) {
       },
       {
         message: "Admin updated successfully",
-      }
+      },
     );
   } catch (error) {
     handleErrors({ response, error });

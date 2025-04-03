@@ -333,7 +333,7 @@ async function updateProductService({
 
   if (data.pictureIds && Array.isArray(data.pictureIds)) {
     pictureIds = pictureIds.filter(
-      (pictureId) => !data.pictureIds.includes(pictureId)
+      (pictureId) => !data.pictureIds.includes(pictureId),
     );
   }
 

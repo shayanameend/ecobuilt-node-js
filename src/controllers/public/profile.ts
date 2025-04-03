@@ -19,7 +19,7 @@ async function createProfile(request: Request, response: Response) {
       case "SUPER_ADMIN":
       case "ADMIN": {
         const { name, phone } = createAdminProfileBodySchema.parse(
-          request.body
+          request.body,
         );
         profileData = { name, phone };
         break;
@@ -60,7 +60,7 @@ async function createProfile(request: Request, response: Response) {
       },
       {
         message: "Profile created successfully",
-      }
+      },
     );
   } catch (error) {
     return handleErrors({ response, error });

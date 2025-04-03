@@ -58,7 +58,7 @@ async function getUsers(request: Request, response: Response) {
       },
       {
         message: "Users fetched successfully",
-      }
+      },
     );
   } catch (error) {
     handleErrors({ response, error });
@@ -79,7 +79,7 @@ async function getUser(request: Request, response: Response) {
       },
       {
         message: "User fetched successfully",
-      }
+      },
     );
   } catch (error) {
     handleErrors({ response, error });
@@ -102,7 +102,7 @@ async function updateUser(request: Request, response: Response) {
       },
       {
         message: "User updated successfully",
-      }
+      },
     );
   } catch (error) {
     handleErrors({ response, error });

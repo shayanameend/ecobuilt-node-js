@@ -49,7 +49,7 @@ async function getProducts(request: Request, response: Response) {
       },
       {
         message: "Products fetched successfully",
-      }
+      },
     );
   } catch (error) {
     handleErrors({ response, error });
@@ -70,7 +70,7 @@ async function getProduct(request: Request, response: Response) {
       },
       {
         message: "Product fetched successfully",
-      }
+      },
     );
   } catch (error) {
     handleErrors({ response, error });

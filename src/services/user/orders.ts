@@ -325,7 +325,7 @@ async function createOrderService({
 
   const totalPrice = products.reduce((totalPrice, product) => {
     const productForOrder = productsForOrder.find(
-      (productForOrder) => productForOrder.productId === product.id
+      (productForOrder) => productForOrder.productId === product.id,
     );
 
     return totalPrice + (productForOrder?.quantity || 1) * product.price;
@@ -376,7 +376,7 @@ async function createOrderService({
     await tx.orderToProduct.createMany({
       data: products.map((product) => {
         const productForOrder = productsForOrder.find(
-          (productForOrder) => productForOrder.productId === product.id
+          (productForOrder) => productForOrder.productId === product.id,
         );
 
         if (!productForOrder) {

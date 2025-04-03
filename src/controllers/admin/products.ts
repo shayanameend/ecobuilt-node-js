@@ -54,7 +54,7 @@ async function getProducts(request: Request, response: Response) {
       },
       {
         message: "Products fetched successfully",
-      }
+      },
     );
   } catch (error) {
     handleErrors({ response, error });
@@ -75,7 +75,7 @@ async function getProduct(request: Request, response: Response) {
       },
       {
         message: "Product fetched successfully",
-      }
+      },
     );
   } catch (error) {
     handleErrors({ response, error });
@@ -86,7 +86,7 @@ async function toggleProductIsDeleted(request: Request, response: Response) {
   try {
     const { id } = toggleProductIsDeletedParamsSchema.parse(request.params);
     const { isDeleted } = toggleProductIsDeletedQuerySchema.parse(
-      request.query
+      request.query,
     );
 
     const { product } = await toggleProductIsDeletedService({
@@ -102,7 +102,7 @@ async function toggleProductIsDeleted(request: Request, response: Response) {
         message: `Product ${
           product.isDeleted ? "deleted" : "restored"
         } successfully!`,
-      }
+      },
     );
   } catch (error) {
     handleErrors({ response, error });

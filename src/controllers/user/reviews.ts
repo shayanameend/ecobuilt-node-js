@@ -25,7 +25,7 @@ async function createReview(request: Request, response: Response) {
       },
       {
         message: "Review created successfully",
-      }
+      },
     );
   } catch (error) {
     handleErrors({ response, error });

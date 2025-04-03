@@ -29,7 +29,7 @@ async function getReviews(request: Request, response: Response) {
       },
       {
         message: "Reviews fetched successfully",
-      }
+      },
     );
   } catch (error) {
     handleErrors({ response, error });

@@ -19,7 +19,7 @@ import {
 async function getCategories(request: Request, response: Response) {
   try {
     const { name, status, isDeleted } = getCategoriesQuerySchema.parse(
-      request.query
+      request.query,
     );
 
     const { categories } = await getCategoriesService({
@@ -34,7 +34,7 @@ async function getCategories(request: Request, response: Response) {
       },
       {
         message: "Categories fetched successfully",
-      }
+      },
     );
   } catch (error) {
     handleErrors({ response, error });
@@ -53,7 +53,7 @@ async function createCategory(request: Request, response: Response) {
       },
       {
         message: "Category created successfully",
-      }
+      },
     );
   } catch (error) {
     handleErrors({ response, error });
@@ -76,7 +76,7 @@ async function updateCategory(request: Request, response: Response) {
       },
       {
         message: "Category updated successfully",
-      }
+      },
     );
   } catch (error) {
     handleErrors({ response, error });
@@ -87,7 +87,7 @@ async function toggleCategoryIsDeleted(request: Request, response: Response) {
   try {
     const { id } = toggleCategoryIsDeletedParamsSchema.parse(request.params);
     const { isDeleted } = toggleCategoryIsDeletedQuerySchema.parse(
-      request.query
+      request.query,
     );
 
     const { category } = await toggleCategoryIsDeletedService({
@@ -103,7 +103,7 @@ async function toggleCategoryIsDeleted(request: Request, response: Response) {
         message: `Category ${
           category.isDeleted ? "deleted" : "restored"
         } successfully!`,
-      }
+      },
     );
   } catch (error) {
     handleErrors({ response, error });

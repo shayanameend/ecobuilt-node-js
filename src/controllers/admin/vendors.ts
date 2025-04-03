@@ -61,7 +61,7 @@ async function getVendors(request: Request, response: Response) {
       },
       {
         message: "Vendors fetched successfully",
-      }
+      },
     );
   } catch (error) {
     handleErrors({ response, error });
@@ -102,7 +102,7 @@ async function getVendor(request: Request, response: Response) {
       },
       {
         message: "Vendor fetched successfully",
-      }
+      },
     );
   } catch (error) {
     handleErrors({ response, error });
@@ -125,7 +125,7 @@ async function updateVendor(request: Request, response: Response) {
       },
       {
         message: "Vendor updated successfully",
-      }
+      },
     );
   } catch (error) {
     handleErrors({ response, error });

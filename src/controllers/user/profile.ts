@@ -21,7 +21,7 @@ async function getProfile(request: Request, response: Response) {
       },
       {
         message: "Profile fetched successfully",
-      }
+      },
     );
   } catch (error) {
     return handleErrors({ response, error });
@@ -52,7 +52,7 @@ async function updateProfile(request: Request, response: Response) {
       },
       {
         message: "Profile updated successfully",
-      }
+      },
     );
   } catch (error) {
     return handleErrors({ response, error });

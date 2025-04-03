@@ -13,7 +13,7 @@ async function getCategories(_request: Request, response: Response) {
       },
       {
         message: "Categories fetched successfully",
-      }
+      },
     );
   } catch (error) {
     handleErrors({ response, error });

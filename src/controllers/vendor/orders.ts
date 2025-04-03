@@ -51,7 +51,7 @@ async function getOrders(request: Request, response: Response) {
       },
       {
         message: "Orders fetched successfully",
-      }
+      },
     );
   } catch (error) {
     handleErrors({ response, error });
@@ -73,7 +73,7 @@ async function getOrder(request: Request, response: Response) {
       },
       {
         message: "Order fetched successfully",
-      }
+      },
     );
   } catch (error) {
     handleErrors({ response, error });
@@ -97,7 +97,7 @@ async function toggleOrderStatus(request: Request, response: Response) {
       },
       {
         message: "Order status toggled successfully",
-      }
+      },
     );
   } catch (error) {
     handleErrors({ response, error });

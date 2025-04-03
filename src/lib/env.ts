@@ -17,7 +17,7 @@ const envSchema = zod.object({
     (val) => (val === "true" ? true : val === "false" ? false : val),
     zod.boolean({
       message: "NODEMAILER_SECURE must be a boolean",
-    })
+    }),
   ),
   NODEMAILER_EMAIL: zod.string().email(),
   NODEMAILER_PASSWORD: zod.string(),

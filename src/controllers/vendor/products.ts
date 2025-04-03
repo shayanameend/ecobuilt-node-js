@@ -57,7 +57,7 @@ async function getProducts(request: Request, response: Response) {
       },
       {
         message: "Products fetched successfully",
-      }
+      },
     );
   } catch (error) {
     handleErrors({ response, error });
@@ -79,7 +79,7 @@ async function getProduct(request: Request, response: Response) {
       },
       {
         message: "Product fetched successfully",
-      }
+      },
     );
   } catch (error) {
     handleErrors({ response, error });
@@ -102,7 +102,7 @@ async function createProduct(request: Request, response: Response) {
       },
       {
         message: "Product created successfully",
-      }
+      },
     );
   } catch (error) {
     handleErrors({ response, error });
@@ -127,7 +127,7 @@ async function updateProduct(request: Request, response: Response) {
       },
       {
         message: "Product updated successfully",
-      }
+      },
     );
   } catch (error) {
     handleErrors({ response, error });
@@ -149,7 +149,7 @@ const deleteProduct = async (request: Request, response: Response) => {
       },
       {
         message: "Product deleted successfully",
-      }
+      },
     );
   } catch (error) {
     handleErrors({ response, error });

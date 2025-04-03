@@ -16,7 +16,7 @@ async function suggestCategory(request: Request, response: Response) {
       },
       {
         message: "Category suggested successfully",
-      }
+      },
     );
   } catch (error) {
     handleErrors({ response, error });

@@ -1,4 +1,4 @@
-import { Role } from "@prisma/client";
+import type { Role } from "@prisma/client";
 
 import { BadResponse } from "~/lib/error";
 import { prisma } from "~/lib/prisma";

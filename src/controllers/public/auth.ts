@@ -31,7 +31,7 @@ async function signUp(request: Request, response: Response) {
       },
       {
         message: "Sign Up Successfull",
-      }
+      },
     );
   } catch (error) {
     return handleErrors({ response, error });
@@ -53,7 +53,7 @@ async function signIn(request: Request, response: Response) {
         },
         {
           message: "OTP Sent Successfully",
-        }
+        },
       );
     }
 
@@ -66,7 +66,7 @@ async function signIn(request: Request, response: Response) {
       },
       {
         message: "Sign In Successfull",
-      }
+      },
     );
   } catch (error) {
     return handleErrors({ response, error });
@@ -85,7 +85,7 @@ async function forgotPassword(request: Request, response: Response) {
       },
       {
         message: "OTP Sent Successfully",
-      }
+      },
     );
   } catch (error) {
     return handleErrors({ response, error });
@@ -106,7 +106,7 @@ async function resendOtp(request: Request, response: Response) {
       {},
       {
         message: "OTP Sent Successfully",
-      }
+      },
     );
   } catch (error) {
     return handleErrors({ response, error });
@@ -137,7 +137,7 @@ async function verifyOtp(request: Request, response: Response) {
       },
       {
         message: "OTP Verified Successfully",
-      }
+      },
     );
   } catch (error) {
     return handleErrors({ response, error });
@@ -159,7 +159,7 @@ async function updatePassword(request: Request, response: Response) {
       },
       {
         message: "Password Updated Successfully",
-      }
+      },
     );
   } catch (error) {
     return handleErrors({ response, error });
@@ -182,7 +182,7 @@ async function refresh(request: Request, response: Response) {
       },
       {
         message: "Token Refreshed Successfully",
-      }
+      },
     );
   } catch (error) {
     return handleErrors({ response, error });
