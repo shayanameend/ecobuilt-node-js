@@ -1,9 +1,12 @@
-import type { Prisma } from "@prisma/client";
 import type { Request, Response } from "express";
 
-import { NotFoundResponse, handleErrors } from "~/lib/error";
-import { prisma } from "~/lib/prisma";
-import { adminSelector } from "~/selectors/admin";
+import { handleErrors } from "~/lib/error";
+import {
+  createCategoryService,
+  getCategoriesService,
+  toggleCategoryIsDeletedService,
+  updateCategoryService,
+} from "~/services/admin/categories";
 import {
   createCategoryBodySchema,
   getCategoriesQuerySchema,
@@ -16,31 +19,13 @@ import {
 async function getCategories(request: Request, response: Response) {
   try {
     const { name, status, isDeleted } = getCategoriesQuerySchema.parse(
-      request.query,
+      request.query
     );
 
-    const where: Prisma.CategoryWhereInput = {};
-
-    if (name) {
-      where.name = {
-        contains: name,
-        mode: "insensitive",
-      };
-    }
-
-    if (status) {
-      where.status = status;
-    }
-
-    if (isDeleted !== undefined) {
-      where.isDeleted = isDeleted;
-    }
-
-    const categories = await prisma.category.findMany({
-      where,
-      select: {
-        ...adminSelector.category,
-      },
+    const { categories } = await getCategoriesService({
+      name,
+      status,
+      isDeleted,
     });
 
     return response.success(
@@ -49,7 +34,7 @@ async function getCategories(request: Request, response: Response) {
       },
       {
         message: "Categories fetched successfully",
-      },
+      }
     );
   } catch (error) {
     handleErrors({ response, error });
@@ -60,12 +45,7 @@ async function createCategory(request: Request, response: Response) {
   try {
     const validatedData = createCategoryBodySchema.parse(request.body);
 
-    const category = await prisma.category.create({
-      data: validatedData,
-      select: {
-        ...adminSelector.category,
-      },
-    });
+    const { category } = await createCategoryService(validatedData);
 
     return response.success(
       {
@@ -73,7 +53,7 @@ async function createCategory(request: Request, response: Response) {
       },
       {
         message: "Category created successfully",
-      },
+      }
     );
   } catch (error) {
     handleErrors({ response, error });
@@ -85,17 +65,10 @@ async function updateCategory(request: Request, response: Response) {
     const { id } = updateCategoryParamsSchema.parse(request.params);
     const validatedData = updateCategoryBodySchema.parse(request.body);
 
-    const category = await prisma.category.update({
-      where: { id },
+    const { category } = await updateCategoryService({
+      id,
       data: validatedData,
-      select: {
-        ...adminSelector.category,
-      },
     });
-
-    if (!category) {
-      throw new NotFoundResponse("Category not found");
-    }
 
     return response.success(
       {
@@ -103,7 +76,7 @@ async function updateCategory(request: Request, response: Response) {
       },
       {
         message: "Category updated successfully",
-      },
+      }
     );
   } catch (error) {
     handleErrors({ response, error });
@@ -114,28 +87,23 @@ async function toggleCategoryIsDeleted(request: Request, response: Response) {
   try {
     const { id } = toggleCategoryIsDeletedParamsSchema.parse(request.params);
     const { isDeleted } = toggleCategoryIsDeletedQuerySchema.parse(
-      request.query,
+      request.query
     );
 
-    const category = await prisma.category.update({
-      where: { id },
-      data: { isDeleted },
-      select: {
-        ...adminSelector.category,
-      },
+    const { category } = await toggleCategoryIsDeletedService({
+      id,
+      isDeleted,
     });
-
-    if (!category) {
-      throw new NotFoundResponse("Category not found");
-    }
 
     return response.success(
       {
         data: { category },
       },
       {
-        message: `Category ${category.isDeleted ? "deleted" : "restored"} successfully!`,
-      },
+        message: `Category ${
+          category.isDeleted ? "deleted" : "restored"
+        } successfully!`,
+      }
     );
   } catch (error) {
     handleErrors({ response, error });

@@ -1,20 +1,11 @@
 import type { Request, Response } from "express";
 
 import { handleErrors } from "~/lib/error";
-import { prisma } from "~/lib/prisma";
-import { publicSelector } from "~/selectors/public";
+import { getCategoriesService } from "~/services/public/categories";
 
 async function getCategories(_request: Request, response: Response) {
   try {
-    const categories = await prisma.category.findMany({
-      where: {
-        status: "APPROVED",
-        isDeleted: false,
-      },
-      select: {
-        ...publicSelector.category,
-      },
-    });
+    const { categories } = await getCategoriesService();
 
     return response.success(
       {
@@ -22,7 +13,7 @@ async function getCategories(_request: Request, response: Response) {
       },
       {
         message: "Categories fetched successfully",
-      },
+      }
     );
   } catch (error) {
     handleErrors({ response, error });

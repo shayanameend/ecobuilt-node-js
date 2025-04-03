@@ -1,12 +1,15 @@
 import type { Request, Response } from "express";
 
-import { default as argon } from "argon2";
-
-import { BadResponse, NotFoundResponse, handleErrors } from "~/lib/error";
-import { prisma } from "~/lib/prisma";
-import { adminSelector } from "~/selectors/admin";
-import { signToken } from "~/utils/jwt";
-import { sendOTP } from "~/utils/mail";
+import { handleErrors } from "~/lib/error";
+import {
+  forgotPasswordService,
+  refreshTokenService,
+  resendOtpService,
+  signInService,
+  signUpService,
+  updatePasswordService,
+  verifyOtpService,
+} from "~/services/public/auth";
 import {
   forgotPasswordBodySchema,
   resendOtpBodySchema,
@@ -18,71 +21,9 @@ import {
 
 async function signUp(request: Request, response: Response) {
   try {
-    if (request.body.email) {
-      request.body.email = request.body.email.toLowerCase();
-    }
-
     const { email, password } = signUpBodySchema.parse(request.body);
 
-    const existingUser = await prisma.auth.findUnique({
-      where: { email },
-      select: {
-        ...adminSelector.auth,
-      },
-    });
-
-    if (existingUser) {
-      throw new BadResponse("User Already Exists");
-    }
-
-    const hashedPassword = await argon.hash(password);
-
-    const auth = await prisma.auth.create({
-      data: {
-        email,
-        password: hashedPassword,
-      },
-      select: {
-        ...adminSelector.auth,
-      },
-    });
-
-    const sampleSpace = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-
-    let code = "";
-
-    for (let i = 0; i < 6; i++) {
-      code += sampleSpace[Math.floor(Math.random() * sampleSpace.length)];
-    }
-
-    const otp = await prisma.otp.upsert({
-      where: {
-        authId: auth.id,
-      },
-      update: {
-        code,
-        type: "VERIFY",
-      },
-      create: {
-        code,
-        type: "VERIFY",
-        auth: {
-          connect: {
-            id: auth.id,
-          },
-        },
-      },
-    });
-
-    sendOTP({
-      to: auth.email,
-      code: otp.code,
-    });
-
-    const token = await signToken({
-      email: auth.email,
-      type: "VERIFY",
-    });
+    const { token } = await signUpService({ email, password });
 
     return response.created(
       {
@@ -90,7 +31,7 @@ async function signUp(request: Request, response: Response) {
       },
       {
         message: "Sign Up Successfull",
-      },
+      }
     );
   } catch (error) {
     return handleErrors({ response, error });
@@ -99,68 +40,11 @@ async function signUp(request: Request, response: Response) {
 
 async function signIn(request: Request, response: Response) {
   try {
-    if (request.body.email) {
-      request.body.email = request.body.email.toLowerCase();
-    }
-
     const { email, password } = signInBodySchema.parse(request.body);
 
-    const user = await prisma.auth.findUnique({
-      where: { email },
-      select: {
-        ...adminSelector.auth,
-        password: true,
-      },
-    });
+    const { token, user } = await signInService({ email, password });
 
     if (!user) {
-      throw new NotFoundResponse("User Not Found");
-    }
-
-    const isPasswordValid = await argon.verify(user.password, password);
-
-    if (!isPasswordValid) {
-      throw new BadResponse("Invalid Password");
-    }
-
-    if (!user.isVerified) {
-      const sampleSpace = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-
-      let code = "";
-
-      for (let i = 0; i < 6; i++) {
-        code += sampleSpace[Math.floor(Math.random() * sampleSpace.length)];
-      }
-
-      const otp = await prisma.otp.upsert({
-        where: {
-          authId: user.id,
-        },
-        update: {
-          code,
-          type: "VERIFY",
-        },
-        create: {
-          code,
-          type: "VERIFY",
-          auth: {
-            connect: {
-              id: user.id,
-            },
-          },
-        },
-      });
-
-      sendOTP({
-        to: user.email,
-        code: otp.code,
-      });
-
-      const token = await signToken({
-        email: user.email,
-        type: "VERIFY",
-      });
-
       return response.success(
         {
           data: {
@@ -169,17 +53,9 @@ async function signIn(request: Request, response: Response) {
         },
         {
           message: "OTP Sent Successfully",
-        },
+        }
       );
     }
-
-    const token = await signToken({
-      email: user.email,
-      type: "ACCESS",
-    });
-
-    // @ts-ignore
-    user.password = undefined;
 
     return response.success(
       {
@@ -190,7 +66,7 @@ async function signIn(request: Request, response: Response) {
       },
       {
         message: "Sign In Successfull",
-      },
+      }
     );
   } catch (error) {
     return handleErrors({ response, error });
@@ -199,59 +75,9 @@ async function signIn(request: Request, response: Response) {
 
 async function forgotPassword(request: Request, response: Response) {
   try {
-    if (request.body.email) {
-      request.body.email = request.body.email.toLowerCase();
-    }
-
     const { email } = forgotPasswordBodySchema.parse(request.body);
 
-    const user = await prisma.auth.findUnique({
-      where: { email },
-      select: {
-        ...adminSelector.auth,
-      },
-    });
-
-    if (!user) {
-      throw new NotFoundResponse("User Not Found");
-    }
-
-    const sampleSpace = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-
-    let code = "";
-
-    for (let i = 0; i < 6; i++) {
-      code += sampleSpace[Math.floor(Math.random() * sampleSpace.length)];
-    }
-
-    const otp = await prisma.otp.upsert({
-      where: {
-        authId: user.id,
-      },
-      update: {
-        code,
-        type: "RESET",
-      },
-      create: {
-        code,
-        type: "RESET",
-        auth: {
-          connect: {
-            id: user.id,
-          },
-        },
-      },
-    });
-
-    sendOTP({
-      to: user.email,
-      code: otp.code,
-    });
-
-    const token = await signToken({
-      email: user.email,
-      type: "RESET",
-    });
+    const { token } = await forgotPasswordService({ email });
 
     return response.success(
       {
@@ -259,7 +85,7 @@ async function forgotPassword(request: Request, response: Response) {
       },
       {
         message: "OTP Sent Successfully",
-      },
+      }
     );
   } catch (error) {
     return handleErrors({ response, error });
@@ -270,43 +96,17 @@ async function resendOtp(request: Request, response: Response) {
   try {
     const { type } = resendOtpBodySchema.parse(request.body);
 
-    const sampleSpace = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-
-    let code = "";
-
-    for (let i = 0; i < 6; i++) {
-      code += sampleSpace[Math.floor(Math.random() * sampleSpace.length)];
-    }
-
-    const otp = await prisma.otp.upsert({
-      where: {
-        authId: request.user.id,
-      },
-      update: {
-        code,
-        type,
-      },
-      create: {
-        code,
-        type,
-        auth: {
-          connect: {
-            id: request.user.id,
-          },
-        },
-      },
-    });
-
-    sendOTP({
-      to: request.user.email,
-      code: otp.code,
+    await resendOtpService({
+      userId: request.user.id,
+      email: request.user.email,
+      type,
     });
 
     return response.success(
       {},
       {
         message: "OTP Sent Successfully",
-      },
+      }
     );
   } catch (error) {
     return handleErrors({ response, error });
@@ -317,60 +117,27 @@ async function verifyOtp(request: Request, response: Response) {
   try {
     const { otp, type } = verifyOtpBodySchema.parse(request.body);
 
-    const existingOtp = await prisma.otp.findUnique({
-      where: {
-        authId: request.user.id,
-        type,
-      },
-    });
-
-    if (!existingOtp) {
-      throw new BadResponse("Invalid OTP");
-    }
-
-    if (existingOtp.code !== otp) {
-      throw new BadResponse("Invalid OTP");
-    }
-
-    if (type === "VERIFY") {
-      request.user = await prisma.auth.update({
-        where: { id: request.user.id },
-        data: { isVerified: true },
-        select: {
-          id: true,
-          email: true,
-          status: true,
-          role: true,
-          isVerified: true,
-          isDeleted: true,
-          createdAt: true,
-          updatedAt: true,
-        },
-      });
-    }
-
-    await prisma.otp.delete({
-      where: {
-        authId: request.user.id,
-        type,
-      },
-    });
-
-    const token = await signToken({
+    const result = await verifyOtpService({
+      userId: request.user.id,
       email: request.user.email,
-      type: type === "VERIFY" ? "ACCESS" : type,
+      otp,
+      type,
     });
+
+    if (type === "VERIFY" && result.user) {
+      request.user = result.user;
+    }
 
     return response.success(
       {
         data: {
-          token,
-          user: type === "VERIFY" ? request.user : undefined,
+          token: result.token,
+          user: result.user,
         },
       },
       {
         message: "OTP Verified Successfully",
-      },
+      }
     );
   } catch (error) {
     return handleErrors({ response, error });
@@ -381,14 +148,9 @@ async function updatePassword(request: Request, response: Response) {
   try {
     const { password } = updatePasswordBodySchema.parse(request.body);
 
-    const hashedPassword = await argon.hash(password);
-
-    await prisma.auth.update({
-      where: { id: request.user.id },
-      data: { password: hashedPassword },
-      select: {
-        ...adminSelector.auth,
-      },
+    await updatePasswordService({
+      userId: request.user.id,
+      password,
     });
 
     return response.success(
@@ -397,7 +159,7 @@ async function updatePassword(request: Request, response: Response) {
       },
       {
         message: "Password Updated Successfully",
-      },
+      }
     );
   } catch (error) {
     return handleErrors({ response, error });
@@ -406,21 +168,21 @@ async function updatePassword(request: Request, response: Response) {
 
 async function refresh(request: Request, response: Response) {
   try {
-    const token = await signToken({
+    const { token, user } = await refreshTokenService({
       email: request.user.email,
-      type: "ACCESS",
+      user: request.user,
     });
 
     return response.success(
       {
         data: {
           token,
-          user: request.user,
+          user,
         },
       },
       {
         message: "Token Refreshed Successfully",
-      },
+      }
     );
   } catch (error) {
     return handleErrors({ response, error });

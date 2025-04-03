@@ -1,30 +1,17 @@
 import type { Request, Response } from "express";
 
-import { BadResponse, NotFoundResponse, handleErrors } from "~/lib/error";
-import { prisma } from "~/lib/prisma";
-import { adminSelector } from "~/selectors/admin";
-import { addFile, removeFile } from "~/utils/file";
+import { handleErrors } from "~/lib/error";
+import {
+  getProfileService,
+  updateProfileService,
+} from "~/services/admin/profile";
 import { updateProfileBodySchema } from "~/validators/admin/profile";
 
 async function getProfile(request: Request, response: Response) {
   try {
-    const profile = await prisma.admin.findUnique({
-      where: {
-        authId: request.user.id,
-      },
-      select: {
-        ...adminSelector.profile,
-        auth: {
-          select: {
-            ...adminSelector.auth,
-          },
-        },
-      },
+    const { profile } = await getProfileService({
+      userId: request.user.id,
     });
-
-    if (!profile) {
-      throw new NotFoundResponse("Profile not found");
-    }
 
     return response.success(
       {
@@ -34,7 +21,7 @@ async function getProfile(request: Request, response: Response) {
       },
       {
         message: "Profile fetched successfully",
-      },
+      }
     );
   } catch (error) {
     return handleErrors({ response, error });
@@ -43,47 +30,14 @@ async function getProfile(request: Request, response: Response) {
 
 async function updateProfile(request: Request, response: Response) {
   try {
-    if (request.body.pictureId && !request.file) {
-      throw new BadResponse("Profile picture is required");
-    }
-
-    if (request.file && !request.body.pictureId) {
-      throw new BadResponse("Picture ID is required");
-    }
-
-    let pictureId = request.body.pictureId;
-
-    if (pictureId) {
-      removeFile({
-        key: pictureId,
-      });
-    }
-
-    if (request.file) {
-      pictureId = addFile({
-        file: request.file,
-      });
-    }
-
     const { name, phone } = updateProfileBodySchema.parse(request.body);
 
-    const profile = await prisma.admin.update({
-      where: {
-        authId: request.user.id,
-      },
-      data: {
-        pictureId,
-        name,
-        phone,
-      },
-      select: {
-        ...adminSelector.profile,
-        auth: {
-          select: {
-            ...adminSelector.auth,
-          },
-        },
-      },
+    const { profile } = await updateProfileService({
+      userId: request.user.id,
+      name,
+      phone,
+      pictureId: request.body.pictureId,
+      file: request.file,
     });
 
     return response.success(
@@ -94,7 +48,7 @@ async function updateProfile(request: Request, response: Response) {
       },
       {
         message: "Profile updated successfully",
-      },
+      }
     );
   } catch (error) {
     return handleErrors({ response, error });
