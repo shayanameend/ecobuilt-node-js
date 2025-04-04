@@ -29,6 +29,9 @@ const envSchema = zod.object({
   AWS_SECRET_ACCESS_KEY: zod.string(),
   AWS_BUCKET: zod.string(),
   AWS_REGION: zod.string(),
+  PAYSTACK_SECRET_KEY: zod.string(),
+  PAYSTACK_PUBLIC_KEY: zod.string(),
+  PLATFORM_FEE_PERCENTAGE: zod.coerce.number().min(0).max(100).default(10),
 });
 
 export const env = envSchema.parse(process.env);

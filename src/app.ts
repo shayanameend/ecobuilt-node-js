@@ -8,6 +8,7 @@ import { verifyRequest } from "~/middlewares/auth";
 import { expandResponse } from "~/middlewares/response";
 import { adminRouter } from "~/routers/admin";
 import { adminsRouter } from "~/routers/admin/admins";
+import { paymentRouter } from "~/routers/payment";
 import { publicRouter } from "~/routers/public";
 import { userRouter } from "~/routers/user";
 import { vendorRouter } from "~/routers/vendor";
@@ -21,6 +22,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(expandResponse);
 
 app.use("/", publicRouter);
+app.use("/payment", paymentRouter);
 
 app.use(
   "/admin/admins",

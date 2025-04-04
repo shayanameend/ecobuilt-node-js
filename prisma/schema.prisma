@@ -77,18 +77,23 @@ model Admin {
 model Vendor {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
-  pictureId     String @map("picture_url")
-  name          String
-  description   String
-  phone         String
-  postalCode    String @map("postal_code")
-  city          String
-  pickupAddress String @map("pickup_address")
+  pictureId             String  @map("picture_url")
+  name                  String
+  description           String
+  phone                 String
+  postalCode            String  @map("postal_code")
+  city                  String
+  pickupAddress         String  @map("pickup_address")
+  paystackRecipientCode String? @map("paystack_recipient_code")
+  bankName              String?
+  accountNumber         String?
+  accountName           String?
 
   authId String @unique @map("user_id") @db.ObjectId
   auth   Auth   @relation(fields: [authId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   products Product[]
+  payments Payment[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
@@ -178,12 +183,14 @@ enum PaymentStatus {
 model Order {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
-  totalPrice    Float         @map("total_price")
-  status        OrderStatus   @default(PENDING)
-  paymentStatus PaymentStatus @default(PENDING) @map("payment_status")
+  totalPrice        Float         @map("total_price")
+  status            OrderStatus   @default(PENDING)
+  paymentStatus     PaymentStatus @default(PENDING) @map("payment_status")
+  paystackReference String?       @map("paystack_reference")
 
   orderToProduct OrderToProduct[]
   review         Review?
+  payment        Payment?
 
   userId String @map("user_id") @db.ObjectId
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
@@ -219,6 +226,42 @@ model Review {
 
   userId String @map("user_id") @db.ObjectId
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+}
+
+enum PaymentType {
+  PAYMENT
+  REFUND
+}
+
+enum PaymentTransferStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+model Payment {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  amount                    Float
+  platformFee               Float                 @map("platform_fee")
+  vendorAmount              Float                 @map("vendor_amount")
+  currency                  String                @default("ZAR")
+  type                      PaymentType           @default(PAYMENT)
+  status                    PaymentStatus         @default(PENDING)
+  transferStatus            PaymentTransferStatus @default(PENDING) @map("transfer_status")
+  paystackReference         String                @unique @map("paystack_reference")
+  paystackTransferReference String?               @map("paystack_transfer_reference")
+  metadata                  Json?
+
+  orderId String @unique @map("order_id") @db.ObjectId
+  order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  vendorId String @map("vendor_id") @db.ObjectId
+  vendor   Vendor @relation(fields: [vendorId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
