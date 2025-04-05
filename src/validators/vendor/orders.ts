@@ -54,12 +54,20 @@ const getOrdersQuerySchema = zod.object({
       message: "Category ID must be a 24-character string",
     })
     .optional(),
-  productId: zod
+  userName: zod
     .string({
-      message: "Product ID must be a string",
+      message: "User name must be a string",
     })
-    .length(24, {
-      message: "Product ID must be a 24-character string",
+    .min(1, {
+      message: "User name must be at least 1 character long",
+    })
+    .optional(),
+  productName: zod
+    .string({
+      message: "Product name must be a string",
+    })
+    .min(1, {
+      message: "Product name must be at least 1 character long",
     })
     .optional(),
   minTotalPrice: zod.coerce

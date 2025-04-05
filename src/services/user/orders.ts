@@ -15,8 +15,8 @@ async function getOrdersService({
   sort,
   status,
   categoryId,
-  vendorId,
-  productId,
+  vendorName,
+  productName,
   minTotalPrice,
   maxTotalPrice,
 }: {
@@ -26,66 +26,11 @@ async function getOrdersService({
   sort?: "LATEST" | "OLDEST";
   status?: OrderStatus;
   categoryId?: string;
-  vendorId?: string;
-  productId?: string;
+  vendorName?: string;
+  productName?: string;
   minTotalPrice?: number;
   maxTotalPrice?: number;
 }) {
-  if (productId) {
-    const product = await prisma.product.findUnique({
-      where: {
-        id: productId,
-        isDeleted: false,
-        category: {
-          status: "APPROVED",
-          isDeleted: false,
-        },
-        vendor: {
-          auth: {
-            status: "APPROVED",
-            isVerified: true,
-            isDeleted: false,
-          },
-        },
-      },
-      select: { id: true },
-    });
-
-    if (!product) {
-      return {
-        orders: [],
-        total: 0,
-        pages: 1,
-        limit,
-        page,
-      };
-    }
-  }
-
-  if (vendorId) {
-    const vendor = await prisma.vendor.findUnique({
-      where: {
-        id: vendorId,
-        auth: {
-          status: "APPROVED",
-          isVerified: true,
-          isDeleted: false,
-        },
-      },
-      select: { id: true },
-    });
-
-    if (!vendor) {
-      return {
-        orders: [],
-        total: 0,
-        pages: 1,
-        limit,
-        page,
-      };
-    }
-  }
-
   if (categoryId) {
     const category = await prisma.category.findUnique({
       where: { id: categoryId, status: "APPROVED", isDeleted: false },
@@ -141,10 +86,30 @@ async function getOrdersService({
     };
   }
 
-  if (productId) {
+  if (productName) {
     where.orderToProduct = {
       some: {
-        productId,
+        product: {
+          name: {
+            contains: productName,
+            mode: "insensitive",
+          },
+        },
+      },
+    };
+  }
+
+  if (vendorName) {
+    where.orderToProduct = {
+      some: {
+        product: {
+          vendor: {
+            name: {
+              contains: vendorName,
+              mode: "insensitive",
+            },
+          },
+        },
       },
     };
   }
@@ -154,16 +119,6 @@ async function getOrdersService({
       some: {
         product: {
           categoryId,
-        },
-      },
-    };
-  }
-
-  if (vendorId) {
-    where.orderToProduct = {
-      every: {
-        product: {
-          vendorId,
         },
       },
     };

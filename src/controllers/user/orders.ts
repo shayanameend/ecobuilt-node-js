@@ -23,8 +23,8 @@ async function getOrders(request: Request, response: Response) {
       sort,
       status,
       categoryId,
-      vendorId,
-      productId,
+      vendorName,
+      productName,
       minTotalPrice,
       maxTotalPrice,
     } = getOrdersQuerySchema.parse(request.query);
@@ -42,8 +42,8 @@ async function getOrders(request: Request, response: Response) {
       sort,
       status,
       categoryId,
-      vendorId,
-      productId,
+      vendorName,
+      productName,
       minTotalPrice,
       maxTotalPrice,
     });
