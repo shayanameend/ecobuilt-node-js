@@ -15,8 +15,6 @@ async function getOrdersService({
   limit,
   sort,
   status,
-  minPrice,
-  maxPrice,
   categoryId,
   productId,
 }: {
@@ -25,8 +23,6 @@ async function getOrdersService({
   limit: number;
   sort?: "LATEST" | "OLDEST";
   status?: OrderStatus;
-  minPrice?: number;
-  maxPrice?: number;
   categoryId?: string;
   productId?: string;
 }) {
@@ -98,25 +94,6 @@ async function getOrdersService({
     where.status = status;
   }
 
-  if (minPrice !== undefined) {
-    where.totalPrice = {
-      gte: minPrice,
-    };
-  }
-
-  if (maxPrice !== undefined) {
-    where.totalPrice = {
-      lte: maxPrice,
-    };
-  }
-
-  if (minPrice !== undefined && maxPrice !== undefined) {
-    where.totalPrice = {
-      gte: minPrice,
-      lte: maxPrice,
-    };
-  }
-
   if (productId) {
     where.orderToProduct = {
       some: {
@@ -151,6 +128,16 @@ async function getOrdersService({
           product: {
             select: {
               ...vendorSelector.product,
+              category: {
+                select: {
+                  ...publicSelector.category,
+                },
+              },
+              vendor: {
+                select: {
+                  ...vendorSelector.profile,
+                },
+              },
             },
           },
         },

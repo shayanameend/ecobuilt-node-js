@@ -27,13 +27,13 @@ const product = {
 
 const order = {
   id: true,
-  totalPrice: true,
   status: true,
+  createdAt: true,
+  updatedAt: true,
 };
 
 const orderToProduct = {
   id: true,
-  price: true,
   quantity: true,
   createdAt: true,
   updatedAt: true,

@@ -39,29 +39,12 @@ const getOrdersQuerySchema = zod.object({
         OrderStatus.PROCESSING,
         OrderStatus.IN_TRANSIT,
         OrderStatus.DELIVERED,
-        OrderStatus.RETURNED,
       ],
       {
         message:
-          "Status must be one of 'PENDING', 'REJECTED', 'APPROVED', 'CANCELLED', 'PROCESSING', 'IN_TRANSIT', 'DELIVERED', 'RETURNED'",
+          "Status must be one of 'PENDING', 'REJECTED', 'APPROVED', 'CANCELLED', 'PROCESSING', 'IN_TRANSIT', 'DELIVERED'",
       },
     )
-    .optional(),
-  minPrice: zod.coerce
-    .number({
-      message: "Min Price must be a number",
-    })
-    .min(1, {
-      message: "Min Price must be a positive number",
-    })
-    .optional(),
-  maxPrice: zod.coerce
-    .number({
-      message: "Max Price must be a number",
-    })
-    .min(1, {
-      message: "Max Price must be a positive number",
-    })
     .optional(),
   categoryId: zod
     .string({

@@ -161,32 +161,23 @@ enum OrderStatus {
   PENDING
   REJECTED
   CANCELLED
-  RETURNED
   APPROVED
   PROCESSING
   IN_TRANSIT
   DELIVERED
 }
 
-enum PaymentStatus {
-  PENDING
-  FAILED
-  PAID
-  REFUNDED
-}
-
 model Order {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
-  totalPrice    Float         @map("total_price")
-  status        OrderStatus   @default(PENDING)
-  paymentStatus PaymentStatus @default(PENDING) @map("payment_status")
-
-  orderToProduct OrderToProduct[]
-  review         Review?
+  status OrderStatus @default(PENDING)
 
   userId String @map("user_id") @db.ObjectId
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  review Review?
+
+  orderToProduct OrderToProduct[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
@@ -195,7 +186,6 @@ model Order {
 model OrderToProduct {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
-  price    Float
   quantity Int
 
   orderId String @map("order_id") @db.ObjectId
@@ -214,7 +204,7 @@ model Review {
   rating  Int
   comment String
 
-  orderId String @unique @map("product_id") @db.ObjectId
+  orderId String @unique @map("order_id") @db.ObjectId
   order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   userId String @map("user_id") @db.ObjectId
