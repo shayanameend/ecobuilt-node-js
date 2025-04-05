@@ -17,8 +17,17 @@ import {
 
 async function getOrders(request: Request, response: Response) {
   try {
-    const { page, limit, sort, status, categoryId, vendorId, productId } =
-      getOrdersQuerySchema.parse(request.query);
+    const {
+      page,
+      limit,
+      sort,
+      status,
+      categoryId,
+      vendorId,
+      productId,
+      minTotalPrice,
+      maxTotalPrice,
+    } = getOrdersQuerySchema.parse(request.query);
 
     const {
       orders,
@@ -35,6 +44,8 @@ async function getOrders(request: Request, response: Response) {
       categoryId,
       vendorId,
       productId,
+      minTotalPrice,
+      maxTotalPrice,
     });
 
     return response.success(

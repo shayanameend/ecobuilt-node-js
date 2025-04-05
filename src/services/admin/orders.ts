@@ -18,6 +18,8 @@ async function getOrdersService({
   categoryId,
   vendorId,
   productId,
+  minTotalPrice,
+  maxTotalPrice,
 }: {
   page: number;
   limit: number;
@@ -26,6 +28,8 @@ async function getOrdersService({
   categoryId?: string;
   vendorId?: string;
   productId?: string;
+  minTotalPrice?: number;
+  maxTotalPrice?: number;
 }) {
   if (productId) {
     const product = await prisma.product.findUnique({
@@ -86,6 +90,22 @@ async function getOrdersService({
 
   if (status) {
     where.status = status;
+  }
+
+  // Add price range filtering
+  if (minTotalPrice !== undefined && maxTotalPrice !== undefined) {
+    where.totalPrice = {
+      gte: minTotalPrice,
+      lte: maxTotalPrice,
+    };
+  } else if (minTotalPrice !== undefined) {
+    where.totalPrice = {
+      gte: minTotalPrice,
+    };
+  } else if (maxTotalPrice !== undefined) {
+    where.totalPrice = {
+      lte: maxTotalPrice,
+    };
   }
 
   if (productId) {
@@ -221,6 +241,87 @@ async function toggleOrderStatusService({
   orderId: string;
   status: OrderStatus;
 }) {
+  // Check if the status is CANCELLED or REJECTED, which requires stock restoration
+  if (status === "CANCELLED" || status === "REJECTED") {
+    // First, get the current order with its products and quantities
+    const currentOrder = await prisma.order.findUnique({
+      where: {
+        id: orderId,
+      },
+      select: {
+        status: true,
+        orderToProduct: {
+          select: {
+            productId: true,
+            quantity: true,
+          },
+        },
+      },
+    });
+
+    if (!currentOrder) {
+      throw new NotFoundResponse("Order not found");
+    }
+
+    // Only restore stock if the order is not already cancelled or rejected
+    if (
+      currentOrder.status !== "CANCELLED" &&
+      currentOrder.status !== "REJECTED"
+    ) {
+      // Use a transaction to update the order status and restore stock
+      return await prisma.$transaction(async (tx) => {
+        // Update the order status
+        const updatedOrder = await tx.order.update({
+          where: {
+            id: orderId,
+          },
+          data: {
+            status,
+          },
+          select: {
+            ...publicSelector.order,
+            orderToProduct: {
+              select: {
+                ...publicSelector.orderToProduct,
+                product: {
+                  select: {
+                    ...vendorSelector.product,
+                    category: {
+                      select: {
+                        ...adminSelector.category,
+                      },
+                    },
+                    vendor: {
+                      select: {
+                        ...vendorSelector.profile,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            user: {
+              select: {
+                ...userSelector.profile,
+              },
+            },
+          },
+        });
+
+        // Restore stock for each product in the order
+        for (const item of currentOrder.orderToProduct) {
+          await tx.product.update({
+            where: { id: item.productId },
+            data: { stock: { increment: item.quantity } },
+          });
+        }
+
+        return { order: updatedOrder };
+      });
+    }
+  }
+
+  // For other status changes, just update the order status without affecting stock
   const order = await prisma.order.update({
     where: {
       id: orderId,

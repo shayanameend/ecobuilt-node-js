@@ -28,6 +28,7 @@ const product = {
 const order = {
   id: true,
   status: true,
+  totalPrice: true,
   createdAt: true,
   updatedAt: true,
 };

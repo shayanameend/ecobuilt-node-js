@@ -62,6 +62,22 @@ const getOrdersQuerySchema = zod.object({
       message: "Product ID must be a 24-character string",
     })
     .optional(),
+  minTotalPrice: zod.coerce
+    .number({
+      message: "Minimum total price must be a number",
+    })
+    .min(0, {
+      message: "Minimum total price must be a non-negative number",
+    })
+    .optional(),
+  maxTotalPrice: zod.coerce
+    .number({
+      message: "Maximum total price must be a number",
+    })
+    .min(0, {
+      message: "Maximum total price must be a non-negative number",
+    })
+    .optional(),
 });
 
 const getOrderParamsSchema = zod.object({
