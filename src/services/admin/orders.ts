@@ -92,18 +92,21 @@ async function getOrdersService({
     where.status = status;
   }
 
-  // Add price range filtering
+  if (minTotalPrice !== undefined) {
+    where.totalPrice = {
+      gte: minTotalPrice,
+    };
+  }
+
+  if (maxTotalPrice !== undefined) {
+    where.totalPrice = {
+      lte: maxTotalPrice,
+    };
+  }
+
   if (minTotalPrice !== undefined && maxTotalPrice !== undefined) {
     where.totalPrice = {
       gte: minTotalPrice,
-      lte: maxTotalPrice,
-    };
-  } else if (minTotalPrice !== undefined) {
-    where.totalPrice = {
-      gte: minTotalPrice,
-    };
-  } else if (maxTotalPrice !== undefined) {
-    where.totalPrice = {
       lte: maxTotalPrice,
     };
   }

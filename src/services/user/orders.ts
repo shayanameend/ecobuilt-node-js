@@ -122,18 +122,21 @@ async function getOrdersService({
     where.status = status;
   }
 
-  // Add price range filtering
+  if (minTotalPrice !== undefined) {
+    where.totalPrice = {
+      gte: minTotalPrice,
+    };
+  }
+
+  if (maxTotalPrice !== undefined) {
+    where.totalPrice = {
+      lte: maxTotalPrice,
+    };
+  }
+
   if (minTotalPrice !== undefined && maxTotalPrice !== undefined) {
     where.totalPrice = {
       gte: minTotalPrice,
-      lte: maxTotalPrice,
-    };
-  } else if (minTotalPrice !== undefined) {
-    where.totalPrice = {
-      gte: minTotalPrice,
-    };
-  } else if (maxTotalPrice !== undefined) {
-    where.totalPrice = {
       lte: maxTotalPrice,
     };
   }
@@ -393,7 +396,6 @@ async function createOrderService({
         return {
           orderId: newOrder.id,
           productId: product.id,
-          price: product.price,
           quantity: productForOrder.quantity,
         };
       }),
